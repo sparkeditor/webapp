@@ -1,15 +1,15 @@
 <template>
     <div id="app">
-        <Editor width="600px" height="400px"></Editor>
+        <WindowManager />
     </div>
 </template>
 <script>
- import Editor from "../Editor";
+ import WindowManager from "../WindowManager";
  
  export default {
      name: 'App',
      components: {
-         Editor
+         WindowManager
      }
  }
 </script>
