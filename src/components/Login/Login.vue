@@ -4,13 +4,19 @@
         <div class="login">
             <form id="form" @submit.prevent="handleSubmit">
                 <label for="username" hidden>Username</label>
-                <input type="text" name="username" placeholder="Username" />
+                <input type="text" name="username" placeholder="Username" @input="input"/>
                 <br>
                 <label for="password" hidden>Password</label>
-                <input type="password" name="password" placeholder="Password" />
+                <input type="password" name="password" placeholder="Password" @input="input"/>
                 <br>
                 <input type="submit" name="submit" value="Log In" />
             </form>
+            <div class="errorMessage" v-if="error">
+                <p>The username or password you entered is incorrect.</p>
+            </div>
+            <div class="errorMessage" v-if="serverError">
+                <p>Sorry, something went wrong! Try again later.</p>
+            </div>
         </div>
     </Container>
 </template>
@@ -23,15 +29,34 @@
      components: {
          Container
      },
+     data: function() {
+         return {
+             error: false,
+             serverError: false
+         }
+     },
      methods: {
+         input(event) {
+             this.error = false;
+             this.serverError = false;
+         },
          handleSubmit(event) {
+             const self = this;
              const formData = new FormData(event.target);
              const credentials = {
                  username: formData.get("username"),
                  password: formData.get("password")
              };
              io.emit("authorize", {credentials: credentials}, function(result) {
-                 console.log(result);
+                 if (result.status === "ACCESS_DENIED") {
+                     self.error = true;
+                 }
+                 else if (result.status === "OKAY") {
+                     console.log(result.projects)
+                 }
+                 else {
+                     self.serverError = true;
+                 }
              });
          }
      }
@@ -72,5 +97,8 @@
  }
  input[type="submit"]:hover {
      background-color: $teal;
+ }
+ .errorMessage p {
+     color: $red;
  }
 </style>
