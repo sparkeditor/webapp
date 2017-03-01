@@ -22,6 +22,7 @@
 </template>
 <script>
  import Container from "../Container";
+ import statusCodes from "../../statusCodes";
  import io from "../../socketClient";
  
  export default {
@@ -48,10 +49,10 @@
                  password: formData.get("password")
              };
              io.emit("authorize", {credentials: credentials}, function(result) {
-                 if (result.status === "ACCESS_DENIED") {
+                 if (result.status === statusCodes.ACCESS_DENIED) {
                      self.error = true;
                  }
-                 else if (result.status === "OK") {
+                 else if (result.status === statusCodes.OKAY) {
                      console.log(result.projects)
                  }
                  else {

@@ -1,0 +1,6 @@
+export default {
+    OKAY: "OK",
+    ACCESS_DENIED: "ACCESS_DENIED",
+    ERROR: "SERVER_ERROR",
+    EEXIST: "ENTITY_ALREADY_EXISTS"
+}
