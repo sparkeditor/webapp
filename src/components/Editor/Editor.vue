@@ -11,7 +11,7 @@
      }
  }
 </script>
-<style>
+<style lang="scss" scoped>
  .editor {
      position: relative;
      width: 100%;

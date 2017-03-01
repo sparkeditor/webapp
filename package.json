@@ -4,12 +4,14 @@
   "version": "0.1.0",
   "author": "Jeremy Dormitzer <jeremy.dormitzer@gmail.com>",
   "scripts": {
-    "start": "cross-env NODE_ENV=development webpack-dev-server --open --hot",
+    "start": "cross-env NODE_ENV=development webpack-dev-server --hot",
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
     "ace-builds": "^1.2.6",
-    "vue": "^2.1.0"
+    "vue": "^2.1.0",
+    "vue-router": "^2.3.0",
+    "vuex": "^2.2.1"
   },
   "devDependencies": {
     "babel-core": "^6.0.0",
@@ -18,6 +20,8 @@
     "cross-env": "^3.0.0",
     "css-loader": "^0.25.0",
     "file-loader": "^0.9.0",
+    "node-sass": "^4.5.0",
+    "sass-loader": "^6.0.2",
     "vue-loader": "^10.0.0",
     "vue-template-compiler": "^2.1.0",
     "webpack": "^2.2.0",

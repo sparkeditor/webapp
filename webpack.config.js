@@ -15,8 +15,9 @@ module.exports = {
                 loader: 'vue-loader',
                 options: {
                     loaders: {
+                        'scss': 'vue-style-loader!css-loader!sass-loader',
+                        'sass': 'vue-style-loader!css-loader!sass-loader?indentedSyntax'
                     }
-                    // other vue-loader options go here
                 }
             },
             {
@@ -25,7 +26,7 @@ module.exports = {
                 exclude: /node_modules/
             },
             {
-                test: /\.(png|jpg|gif|svg)$/,
+                test: /\.(png|jpg|gif|svg|woff|woff2|ttf|eot)$/,
                 loader: 'file-loader',
                 options: {
                     name: '[name].[ext]?[hash]'
@@ -37,9 +38,11 @@ module.exports = {
         alias: {
             'vue$': 'vue/dist/vue.common.js',
             'ace': 'ace-builds/src-min-noconflict/ace.js'
-        }
+        },
+        extensions: [".js", ".json", ".vue"]
     },
     devServer: {
+        port: 3000,
         historyApiFallback: true,
         noInfo: true
     },
