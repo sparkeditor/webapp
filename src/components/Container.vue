@@ -54,6 +54,9 @@
  }
 
  .container {
+     position: fixed;
+     top: 0;
+     right: 0;
      color: inherit;
      font-family: inherit;
      font-size: inherit;
