@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "ace-builds": "^1.2.6",
+    "socket.io-client": "^1.7.3",
     "vue": "^2.1.0",
     "vue-router": "^2.3.0",
     "vuex": "^2.2.1"

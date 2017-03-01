@@ -16,6 +16,7 @@
 </template>
 <script>
  import Container from "../Container";
+ import io from "../../socketClient";
  
  export default {
      name: "Login",
