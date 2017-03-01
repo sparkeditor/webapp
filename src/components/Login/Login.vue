@@ -2,7 +2,7 @@
     <Container>
         <h1>Spark Editor</h1>
         <div class="login">
-            <form>
+            <form id="form" @submit.prevent="handleSubmit">
                 <label for="username" hidden>Username</label>
                 <input type="text" name="username" placeholder="Username" />
                 <br>
@@ -22,6 +22,18 @@
      name: "Login",
      components: {
          Container
+     },
+     methods: {
+         handleSubmit(event) {
+             const formData = new FormData(event.target);
+             const credentials = {
+                 username: formData.get("username"),
+                 password: formData.get("password")
+             };
+             io.emit("authorize", {credentials: credentials}, function(result) {
+                 console.log(result);
+             });
+         }
      }
  }
 </script>
@@ -58,7 +70,7 @@
      color: $cream;
      background-color: $slate;
  }
- input[type="submit"]:hover, input[type="submit"]:focus {
+ input[type="submit"]:hover {
      background-color: $teal;
  }
 </style>
