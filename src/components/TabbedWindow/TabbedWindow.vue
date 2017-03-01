@@ -1,20 +1,20 @@
 <template>
-    <div class="app">
-        <TabbedWindow />
+    <div class="tabbedWindow">
+        <Editor />
     </div>
 </template>
 <script>
- import TabbedWindow from "../TabbedWindow";
+ import Editor from "../Editor";
  
  export default {
-     name: 'App',
+     name: "TabbedWindow",
      components: {
-         TabbedWindow
+         Editor
      }
  }
 </script>
 <style lang="scss" scoped>
- .app {
+ .tabbedWindow {
      width: 100%;
      height: 100%;
  }
