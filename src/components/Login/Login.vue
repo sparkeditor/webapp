@@ -49,11 +49,13 @@
                  password: formData.get("password")
              };
              io.emit("authorize", {credentials: credentials}, function(result) {
-                 if (result.status === statusCodes.ACCESS_DENIED) {
-                     self.error = true;
+                 if (result.status === statusCodes.OKAY) {
+                     self.$store.commit("setCredentials", credentials);
+                     self.$store.commit("setProjects", result.projects);
+                     self.$router.push("/app");
                  }
-                 else if (result.status === statusCodes.OKAY) {
-                     console.log(result.projects)
+                 else if (result.status === statusCodes.ACCESS_DENIED) {
+                     self.error = true;
                  }
                  else {
                      self.serverError = true;
