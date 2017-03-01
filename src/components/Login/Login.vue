@@ -1,6 +1,6 @@
 <template>
     <Container>
-        <h1 class="pageHeader">Spark Editor</h1>
+        <h1>Spark Editor</h1>
         <div class="login">
             <form>
                 <label for="username" hidden>Username</label>
