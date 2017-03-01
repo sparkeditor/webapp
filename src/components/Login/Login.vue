@@ -51,7 +51,7 @@
                  if (result.status === "ACCESS_DENIED") {
                      self.error = true;
                  }
-                 else if (result.status === "OKAY") {
+                 else if (result.status === "OK") {
                      console.log(result.projects)
                  }
                  else {
