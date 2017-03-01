@@ -16,7 +16,10 @@ const routes = [
     {path: "/app", component: App}
 ];
 
-const router = new VueRouter({ routes });
+const router = new VueRouter({
+    mode: "history",
+    routes
+});
 
 new Vue({
     router
