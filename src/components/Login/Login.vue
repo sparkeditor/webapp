@@ -12,7 +12,7 @@
                 <input type="submit" name="submit" value="Log In" />
             </form>
             <div class="errorMessage" v-if="error">
-                <p>The username or password you entered is incorrect.</p>
+                <p>Incorrect username or password.</p>
             </div>
             <div class="errorMessage" v-if="serverError">
                 <p>Sorry, something went wrong! Try again later.</p>

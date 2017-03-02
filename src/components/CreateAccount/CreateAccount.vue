@@ -18,7 +18,7 @@
                 <p>Passwords must match.</p>
             </div>
             <div class="errorMessage" v-if="eexistError">
-                <p>A user with username {{ username  }} already exists.</p>
+                <p>User {{ username  }} already exists.</p>
             </div>
             <div class="errorMessage" v-if="serverError">
                 <p>Sorry, something went wrong! Try again later.</p>
