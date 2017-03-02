@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import store from "./store";
 import App from './components/App';
 import Login from './components/Login';
+import CreateAccount from './components/CreateAccount';
 
 Vue.use(VueRouter);
 
@@ -12,6 +13,7 @@ const routes = [
         return "/login";
     }},
     {path: "/login", component: Login},
+    {path: "/create-account", component: CreateAccount},
     {path: "/app", component: App}
 ];
 

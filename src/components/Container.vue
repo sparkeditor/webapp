@@ -93,4 +93,13 @@
  h5 {
      font-size: 1.6rem;
  }
+ a {
+     color: $slate;
+ }
+ a:visited {
+     color: $red;
+ }
+ a:hover {
+     color: $teal;
+ }
 </style>

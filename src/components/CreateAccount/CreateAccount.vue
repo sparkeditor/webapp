@@ -1,66 +1,74 @@
 <template>
     <Container>
-        <h1>Spark Editor</h1>
-        <div class="login">
+        <h1>Create Account</h1>
+        <div class="createAccount">
             <form @submit.prevent="handleSubmit">
                 <label for="username" hidden>Username</label>
-                <input type="text" name="username" placeholder="Username" @input="input"/>
+                <input type="text" name="username" placeholder="New Username" @input="input" v-model="username"/>
                 <br>
                 <label for="password" hidden>Password</label>
-                <input type="password" name="password" placeholder="Password" @input="input"/>
+                <input type="password" name="password" placeholder="New Password" @input="input" v-model="password"/>
                 <br>
-                <input type="submit" name="submit" value="Log In" />
+                <label for="confirmPassword" hidden>Confirm Password</label>
+                <input type="password" name="confirmPassword" placeholder="Confirm Password" @input="input" v-model="confirmPassword"/>
+                <br>
+                <input type="submit" name="submit" value="Create Account" />
             </form>
-            <div class="errorMessage" v-if="error">
-                <p>The username or password you entered is incorrect.</p>
+            <div class="errorMessage" v-if="!passwordsMatch">
+                <p>Passwords must match.</p>
+            </div>
+            <div class="errorMessage" v-if="eexistError">
+                <p>A user with username {{ username  }} already exists.</p>
             </div>
             <div class="errorMessage" v-if="serverError">
                 <p>Sorry, something went wrong! Try again later.</p>
-            </div>
-            <div class="createAccountLink">
-                <p>
-                    Don't have an account? <router-link to="/create-account">Sign up</router-link>!
-                </p>
             </div>
         </div>
     </Container>
 </template>
 <script>
- import Container from "../Container";
- import statusCodes from "../../statusCodes";
+ import Container from "../Container.vue";
  import io from "../../socketClient";
+ import statusCodes from "../../statusCodes";
  
  export default {
-     name: "Login",
+     name: "CreateAccount",
      components: {
          Container
      },
      data: function() {
          return {
-             error: false,
+             username: "",
+             password: "",
+             confirmPassword: "",
+             eexistError: false,
              serverError: false
+         }
+     },
+     computed: {
+         passwordsMatch() {
+             return this.password == this.confirmPassword;
          }
      },
      methods: {
          input(event) {
-             this.error = false;
+             this.eexistError = false;
              this.serverError = false;
          },
          handleSubmit(event) {
+             if (!this.passwordsMatch) {
+                 return;
+             }
              const self = this;
              const formData = new FormData(event.target);
-             const credentials = {
-                 username: formData.get("username"),
-                 password: formData.get("password")
-             };
-             io.emit("authorize", {credentials: credentials}, function(result) {
+             const username = formData.get("username");
+             const password = formData.get("password");
+             io.emit("createUser", {username: username, password: password}, function(result) {
                  if (result.status === statusCodes.OKAY) {
-                     self.$store.commit("setCredentials", credentials);
-                     self.$store.commit("setProjects", result.projects);
-                     self.$router.push("/app");
+                     self.$router.push("/login");
                  }
-                 else if (result.status === statusCodes.ACCESS_DENIED) {
-                     self.error = true;
+                 else if (result.status === statusCodes.EEXIST) {
+                     self.eexistError = true;
                  }
                  else {
                      self.serverError = true;
@@ -73,7 +81,7 @@
 <style lang="scss" scoped>
  @import "../../scss/colors.scss";
  
- .login {
+ .createAccount {
      width: 350px;
      text-align: left;
      margin: auto;
@@ -109,8 +117,5 @@
  }
  .errorMessage p {
      color: $red;
- }
- .createAccountLink {
-     text-align: center;
  }
 </style>
