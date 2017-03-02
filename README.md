@@ -1,4 +1,4 @@
-# spark-webapp
+# Spark Editor
 
 > The Spark editor web application
 
