@@ -115,6 +115,9 @@
  input[type="submit"]:hover {
      background-color: $teal;
  }
+ .errorMessage {
+     text-align: center;
+ }
  .errorMessage p {
      color: $red;
  }
