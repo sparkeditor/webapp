@@ -57,7 +57,7 @@
                  if (result.status === statusCodes.OKAY) {
                      self.$store.commit("setCredentials", credentials);
                      self.$store.commit("setProjects", result.projects);
-                     self.$router.push("/app");
+                     self.$router.push("/choose-project");
                  }
                  else if (result.status === statusCodes.ACCESS_DENIED) {
                      self.error = true;

@@ -3,6 +3,7 @@ import VueRouter from 'vue-router';
 import store from "./store";
 import App from './components/App';
 import Login from './components/Login';
+import ProjectChooser from './components/ProjectChooser'
 import CreateAccount from './components/CreateAccount';
 
 Vue.use(VueRouter);
@@ -14,7 +15,8 @@ const routes = [
     }},
     {path: "/login", component: Login},
     {path: "/create-account", component: CreateAccount},
-    {path: "/app", component: App}
+    {path: "/choose-project", component: ProjectChooser},
+    {path: "/editor", component: App}
 ];
 
 const router = new VueRouter({

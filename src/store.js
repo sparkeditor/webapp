@@ -6,7 +6,8 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
     state: {
         credentials: null,
-        projects: []
+        projects: [],
+        currentProject: null
     },
     mutations: {
         setCredentials(state, credentials) {
@@ -14,6 +15,9 @@ const store = new Vuex.Store({
         },
         setProjects(state, projects) {
             state.projects = projects;
+        },
+        setCurrentProject(state, project) {
+            state.currentProject = project;
         }
     }
 });
