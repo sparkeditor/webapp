@@ -64,15 +64,20 @@
      font-size: inherit;
      text-align: center;
  }
-
- * {
+ .container {
      color: $raven;
      font-family: "Open Sans", arial, sans-serif;
      font-size: 1.2rem;
      line-height: 1.5;
  }
- * + * {
-     margin-top: 1.5em;
+ .container input, .container button {
+     font-family: "Open Sans", arial, sans-serif;
+     line-height: 1.5;
+     font-size: 1.2rem;
+     color: $raven;
+ }
+ .container * + * {
+     margin-top: 1.5rem;
  }
  h1, h2, h3, h4, h5 {
      font-weight: normal;

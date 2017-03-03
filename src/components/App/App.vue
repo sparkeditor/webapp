@@ -1,19 +1,24 @@
 <template>
-    <Container>
+    <div class="appContainer">
         <TabbedWindow />
-    </Container>
+    </div>
 </template>
 <script>
- import Container from "../Container";
  import TabbedWindow from "../TabbedWindow";
  
  export default {
      name: 'App',
      components: {
-         Container,
          TabbedWindow
      }
  }
 </script>
 <style lang="scss" scoped>
+ .appContainer {
+     position: fixed;
+     top: 0;
+     right: 0;
+     height: 100%;
+     width: 100%;
+ }
 </style>
