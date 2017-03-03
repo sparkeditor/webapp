@@ -3,6 +3,7 @@
         <div v-if="projectInfo" class="tree">
             <TreeItem :name="projectInfo.rootDirectory.name"
                       :type="projectInfo.rootDirectory.type"
+                      :path="projectInfo.rootDirectory.path"
                       :children="projectInfo.rootDirectory.children"
                       :ignored="projectInfo.rootDirectory.ignored"
                       :startExpanded="true"
@@ -75,7 +76,6 @@
      width: 100%;
      height: 100%;
      overflow-y: scroll;
-     overflow-x: visible;
  }
  .tree {
      margin-top: .5rem;

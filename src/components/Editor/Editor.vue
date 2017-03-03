@@ -8,6 +8,25 @@
      name: "Editor",
      mounted: function() {
          this.editor = ace.edit(this.$el);
+         this.editor.$blockScrolling = Infinity;
+         this.editor.setValue(this.content);
+     },
+     data() {
+         return {
+             editor: null
+         }
+     },
+     props: {
+         content: {
+             type: String,
+             required: true
+         }
+     },
+     watch: {
+         content() {
+             this.editor.setValue(this.content);
+             this.editor.gotoLine(0);
+         }
      }
  }
 </script>

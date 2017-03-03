@@ -16,6 +16,7 @@
             <TreeItem v-for="child in children"
                       :name="child.name"
                       :type="child.type"
+                      :path="child.path"
                       :children="child.children"
                       :ignored="child.ignored"
             />
@@ -73,6 +74,9 @@
              if (this.children && this.children.length > 0) {
                  this.expand = !this.expand;
              }
+             else if (this.type !== "directory") {
+                 this.$store.commit("setCurrentFile", this.path);
+             }
          },
          hoverOff(event) {
              this.hover = false;
@@ -90,6 +94,10 @@
              type: String,
              required: true
          },
+         path: {
+             type: String,
+             required: true
+         },
          children: Array,
          ignored: Boolean,
          startExpanded: Boolean
@@ -103,6 +111,7 @@
 
  ul {
      margin: 0px;
+     padding-left: 1.2rem;
  }
  .treeItem {
      background-color: $cream;
@@ -114,7 +123,6 @@
      padding-left: 10px;
      font-size: 1.2rem;
      white-space: nowrap;
-     overflow: hidden;
      text-overflow: ellipsis;
  }
  .treeItem:hover {

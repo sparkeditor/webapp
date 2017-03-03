@@ -5,12 +5,13 @@
                 <TreeView />
             </div>
             <div class="window col-10">
-                <TabbedWindow />
+                <TabbedWindow :currentFile="currentFile"/>
             </div>
         </div>
     </div>
 </template>
 <script>
+ import {mapState} from 'vuex';
  import TreeView from "../TreeView";
  import TabbedWindow from "../TabbedWindow";
  
@@ -19,6 +20,11 @@
      components: {
          TreeView,
          TabbedWindow
+     },
+     computed: {
+         ...mapState([
+             'currentFile'
+         ])
      }
  }
 </script>
