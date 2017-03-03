@@ -4,13 +4,16 @@
         <div class="createAccount">
             <form @submit.prevent="handleSubmit">
                 <label for="username" hidden>Username</label>
-                <input type="text" name="username" placeholder="New Username" @input="input" v-model="username"/>
+                <input type="text" name="username" placeholder="New Username"
+                       @input="input" v-model="username"/>
                 <br>
                 <label for="password" hidden>Password</label>
-                <input type="password" name="password" placeholder="New Password" @input="input" v-model="password"/>
+                <input type="password" name="password" placeholder="New Password"
+                       @input="input" v-model="password"/>
                 <br>
                 <label for="confirmPassword" hidden>Confirm Password</label>
-                <input type="password" name="confirmPassword" placeholder="Confirm Password" @input="input" v-model="confirmPassword"/>
+                <input type="password" name="confirmPassword" placeholder="Confirm Password"
+                       @input="input" v-model="confirmPassword"/>
                 <br>
                 <input type="submit" name="submit" value="Create Account" />
             </form>
