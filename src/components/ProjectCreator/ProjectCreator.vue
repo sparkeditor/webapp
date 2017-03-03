@@ -41,7 +41,7 @@
                      function(response) {
                          if (response.status === statusCodes.OKAY) {
                              self.$store.commit("addProject", response.project);
-                             self.$store.commit("setCurrentProject", response.project.name);
+                             self.$store.commit("setCurrentProject", response.project);
                              self.$router.push("/editor");
                          }
                          else if (response.status === statusCodes.ACCESS_DENIED) {
