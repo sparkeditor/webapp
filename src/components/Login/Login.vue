@@ -4,10 +4,12 @@
         <div class="login">
             <form @submit.prevent="handleSubmit">
                 <label for="username" hidden>Username</label>
-                <input type="text" name="username" placeholder="Username" @input="input"/>
+                <input type="text" name="username" placeholder="Username"
+                       v-model="username" @input="input"/>
                 <br>
                 <label for="password" hidden>Password</label>
-                <input type="password" name="password" placeholder="Password" @input="input"/>
+                <input type="password" name="password" placeholder="Password"
+                       v-model="password" @input="input"/>
                 <br>
                 <input type="submit" name="submit" value="Log In" />
             </form>
@@ -37,6 +39,8 @@
      },
      data: function() {
          return {
+             username: null,
+             password: null,
              error: false,
              serverError: false
          }
@@ -48,10 +52,9 @@
          },
          handleSubmit(event) {
              const self = this;
-             const formData = new FormData(event.target);
              const credentials = {
-                 username: formData.get("username"),
-                 password: formData.get("password")
+                 username: self.username,
+                 password: self.password
              };
              io.emit("authorize", {credentials: credentials}, function(result) {
                  if (result.status === statusCodes.OKAY) {
