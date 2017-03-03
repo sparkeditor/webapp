@@ -8,7 +8,8 @@
      name: "Container"
  }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+ @import "../scss/font-awesome/font-awesome.scss";
  @import "../scss/colors.scss";
  
  @font-face {
@@ -53,15 +54,17 @@
      url('../fonts/Open-Sans-300italic/Open-Sans-300italic.svg#OpenSans') format('svg');
  }
 
- .container {
+ html, body {
+     width: 100%;
+     min-height: 100%;
+     margin: 0;
+     background-color: $cream;
      color: inherit;
      font-family: inherit;
      font-size: inherit;
      text-align: center;
-     width: 100%;
-     min-height: 100%;
-     background-color: $cream;
  }
+
  * {
      color: $raven;
      font-family: "Open Sans", arial, sans-serif;
