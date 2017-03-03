@@ -1,7 +1,13 @@
 <template>
     <div class="appContainer">
-        <TreeView />
-        <TabbedWindow />
+        <div class="row appWrapper">
+            <div class="treeView col-2">
+                <TreeView />
+            </div>
+            <div class="window col-10">
+                <TabbedWindow />
+            </div>
+        </div>
     </div>
 </template>
 <script>
@@ -16,12 +22,30 @@
      }
  }
 </script>
-<style lang="scss" scoped>
+<style lang="scss">
+ @import "../../scss/grid.scss";
+ 
+ html, body {
+     width: 100%;
+     height: 100%;
+     margin: 0;
+ }
  .appContainer {
      position: fixed;
      top: 0;
      right: 0;
      height: 100%;
      width: 100%;
+ }
+ .appWrapper {
+     height: 100%;
+ }
+ .treeView {
+     padding: 0;
+     height: 100%;
+ }
+ .window {
+     padding: 0;
+     height: 100%;
  }
 </style>

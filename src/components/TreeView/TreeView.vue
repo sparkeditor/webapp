@@ -60,8 +60,19 @@
  }
 </script>
 <style lang="scss" scoped>
+ @import "../../scss/colors.scss";
+ 
+ ::-webkit-scrollbar {
+     width: 12px;
+ }
+ ::-webkit-scrollbar-track {
+     background-color: $cream;
+ }
+ ::-webkit-scrollbar-thumb {
+     background-color: $heather;
+ }
  .treeView {
-     width: 350px;
+     width: 100%;
      height: 100%;
      overflow-y: scroll;
      overflow-x: visible;
