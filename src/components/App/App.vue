@@ -1,14 +1,17 @@
 <template>
     <div class="appContainer">
+        <TreeView />
         <TabbedWindow />
     </div>
 </template>
 <script>
+ import TreeView from "../TreeView";
  import TabbedWindow from "../TabbedWindow";
  
  export default {
      name: 'App',
      components: {
+         TreeView,
          TabbedWindow
      }
  }
