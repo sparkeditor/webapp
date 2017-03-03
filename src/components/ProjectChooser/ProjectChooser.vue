@@ -14,6 +14,12 @@
                     </button>
                 </li>
             </ul>
+            <button class="createProjectButton" @click.prevent="handleNewProjectClick"
+                    v-if="showNewProjectButton">
+                <i class="fa fa-lg fa-plus" aria-hidden="true"></i>
+                <span>Create New Project</span>
+            </button>
+            <router-view></router-view>
         </div>
         <div v-else>
             <p>Please <router-link to="/login">log in</router-link> to choose a project</p>
@@ -37,7 +43,8 @@
      },
      data() {
          return {
-             active: null
+             active: null,
+             showNewProjectButton: true
          }
      },
      methods: {
@@ -56,6 +63,17 @@
          },
          clearActive() {
              this.active = null;
+         },
+         handleNewProjectClick() {
+             this.showNewProjectButton = false;
+             this.$router.push("/projects/new");
+         }
+     },
+     watch: {
+         "$route" (to, from) {
+             if (to.path === "/projects") {
+                 this.showNewProjectButton = true;
+             }
          }
      }
  }
@@ -71,6 +89,9 @@
      list-style: none;
      padding-left: 0;
  }
+ i {
+     padding-right: 5px;
+ }
  .projectButton {
      width: 100%;
      box-sizing: border-box;
@@ -85,6 +106,23 @@
      color: $cream;
  }
  .projectButton:hover {
+     background-color: $teal;
+     cursor: pointer;
+ }
+ .createProjectButton {
+     width: 100%;
+     box-sizing: border-box;
+     text-align: left;
+     box-shadow: none;
+     color: $raven;
+     line-height: 2;
+     border: none;
+     background-color: $yellow;
+ }
+ .createProjectButton i, .createProjectButton span {
+     color: $raven;
+ }
+ .createProjectButton:hover {
      background-color: $teal;
      cursor: pointer;
  }

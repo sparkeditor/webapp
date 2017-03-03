@@ -13,6 +13,9 @@ const store = new Vuex.Store({
         setCredentials(state, credentials) {
             state.credentials = credentials;
         },
+        addProject(state, project) {
+            state.projects.push(project);
+        },
         setProjects(state, projects) {
             state.projects = projects;
         },

@@ -3,7 +3,8 @@ import VueRouter from 'vue-router';
 import store from "./store";
 import App from './components/App';
 import Login from './components/Login';
-import ProjectChooser from './components/ProjectChooser'
+import ProjectChooser from './components/ProjectChooser';
+import ProjectCreator from './components/ProjectCreator';
 import CreateAccount from './components/CreateAccount';
 
 Vue.use(VueRouter);
@@ -15,7 +16,13 @@ const routes = [
     }},
     {path: "/login", component: Login},
     {path: "/create-account", component: CreateAccount},
-    {path: "/choose-project", component: ProjectChooser},
+    {
+        path: "/projects",
+        component: ProjectChooser,
+        children: [
+            {path: "new", component: ProjectCreator}
+        ]
+    },
     {path: "/editor", component: App}
 ];
 
