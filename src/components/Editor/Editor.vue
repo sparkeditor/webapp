@@ -2,30 +2,46 @@
     <div class="editor"></div>
 </template>
 <script>
- import 'ace'
+ import ace from "brace";
+ import languages from "./languages";
  
  export default {
      name: "Editor",
      mounted: function() {
          this.editor = ace.edit(this.$el);
+         this.editor.setOptions({
+             fontSize: "0.9rem"
+         });
          this.editor.$blockScrolling = Infinity;
-         this.editor.setValue(this.content);
+         this.setContent(this.content);
      },
      data() {
          return {
              editor: null
          }
      },
+     methods: {
+         setContent(content) {
+             if (this.extension) {
+                 const language = languages[this.extension];
+                 if (language) {
+                     this.editor.getSession().setMode("ace/mode/" + language);
+                 }
+             }
+             this.editor.setValue(content);
+             this.editor.gotoLine(0);
+         }
+     },
      props: {
          content: {
              type: String,
              required: true
-         }
+         },
+         extension: String
      },
      watch: {
          content() {
-             this.editor.setValue(this.content);
-             this.editor.gotoLine(0);
+             this.setContent(this.content);
          }
      }
  }

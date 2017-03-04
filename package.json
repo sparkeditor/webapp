@@ -8,7 +8,7 @@
     "build": "cross-env NODE_ENV=production webpack --progress --hide-modules"
   },
   "dependencies": {
-    "ace-builds": "^1.2.6",
+    "brace": "^0.10.0",
     "socket.io-client": "^1.7.3",
     "vue": "^2.1.0",
     "vue-router": "^2.3.0",

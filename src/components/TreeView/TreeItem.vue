@@ -37,6 +37,13 @@
                  return "fa-caret-right";
              }
          },
+         file() {
+             return {
+                 name: this.name,
+                 type: this.type,
+                 path: this.path
+             }
+         },
          isIgnored() {
              return this.ignored;
          },
@@ -75,7 +82,7 @@
                  this.expand = !this.expand;
              }
              else if (this.type !== "directory") {
-                 this.$store.commit("setCurrentFile", this.path);
+                 this.$store.commit("setCurrentFile", this.file);
              }
          },
          hoverOff(event) {
@@ -111,7 +118,7 @@
 
  ul {
      margin: 0px;
-     padding-left: 1.2rem;
+     padding-left: 0.9rem;
  }
  .treeItem {
      background-color: $cream;
@@ -120,8 +127,8 @@
      line-height: 1.5;
      list-style: none;
      text-align: left;
-     padding-left: 10px;
-     font-size: 1.2rem;
+     padding-left: 0.9rem;
+     font-size: 0.9rem;
      white-space: nowrap;
      text-overflow: ellipsis;
  }

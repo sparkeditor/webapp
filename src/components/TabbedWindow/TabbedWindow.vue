@@ -1,6 +1,6 @@
 <template>
     <div class="tabbedWindow">
-        <Editor :content="currentContent" />
+        <Editor :content="currentContent" :extension="currentFileType"/>
     </div>
 </template>
 <script>
@@ -15,10 +15,18 @@
      },
      computed: {
          currentContent() {
-             if (this.currentFile) {
-                 return this.files[this.currentFile] || "";
+             if (this.currentFile && this.currentFile.path) {
+                 return this.files[this.currentFile.path] || "";
              }
              else return "";
+         },
+         currentFileType() {
+             if (this.currentFile) {
+                 return this.currentFile.type;
+             }
+             else {
+                 return "";
+             }
          }
      },
      data() {
@@ -31,24 +39,24 @@
          }
      },
      props: {
-         // filepath of the current file
-         currentFile: String
+         // current file object
+         currentFile: Object
      },
      watch: {
          currentFile() {
              const self = this;
              self.loading = true;
-             if (self.currentFile && self.currentFile !== "") {
+             if (self.currentFile && self.currentFile.path) {
                  const credentials = self.$store.state.credentials;
                  io.emit("open",
-                         {credentials: credentials, file: self.currentFile},
+                         {credentials: credentials, file: self.currentFile.path},
                          function(response) {
                              self.loading = false;
                              if (response.status === statusCodes.OKAY) {
                                  self.authError = false;
                                  self.serverError = false;
                                  const newFileListing = {};
-                                 newFileListing[self.currentFile] = response.contents;
+                                 newFileListing[self.currentFile.path] = response.contents;
                                  self.files = Object.assign(
                                      {},
                                      self.files,
