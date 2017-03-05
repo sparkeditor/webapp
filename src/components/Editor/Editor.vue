@@ -3,7 +3,10 @@
 </template>
 <script>
  import ace from "brace";
+ import "brace/ext/modelist";
  import languages from "./languages";
+
+ const modelist = ace.acequire("ace/ext/modelist");
  
  export default {
      name: "Editor",
@@ -22,10 +25,10 @@
      },
      methods: {
          setContent(content) {
-             if (this.extension) {
-                 const language = languages[this.extension];
-                 if (language) {
-                     this.editor.getSession().setMode("ace/mode/" + language);
+             if (this.path && this.path !== "") {
+                 const language = modelist.getModeForPath(this.path);
+                 if (language && language.mode) {
+                     this.editor.getSession().setMode(language.mode);
                  }
              }
              this.editor.setValue(content);
@@ -37,7 +40,7 @@
              type: String,
              required: true
          },
-         extension: String
+         path: String
      },
      watch: {
          content() {

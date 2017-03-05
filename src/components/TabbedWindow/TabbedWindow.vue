@@ -1,6 +1,6 @@
 <template>
     <div class="tabbedWindow">
-        <Editor :content="currentContent" :extension="currentFileType"/>
+        <Editor :content="currentContent" :path="currentFilePath"/>
     </div>
 </template>
 <script>
@@ -20,9 +20,9 @@
              }
              else return "";
          },
-         currentFileType() {
+         currentFilePath() {
              if (this.currentFile) {
-                 return this.currentFile.type;
+                 return this.currentFile.path;
              }
              else {
                  return "";
