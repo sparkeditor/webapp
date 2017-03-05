@@ -5,15 +5,25 @@
  import ace from "brace";
  import "brace/ext/modelist";
  import "./languages";
+ import io from "../../socketClient";
  
  const modelist = ace.acequire("ace/ext/modelist");
  
  export default {
      name: "Editor",
      mounted: function() {
+         const self = this;
          this.editor = ace.edit(this.$el);
          this.editor.setOptions({
              fontSize: "0.9rem"
+         });
+         this.editor.getSession().getSelection().on("changeCursor", function() {
+             io.emit("moveCursor", {
+                 cursor: self.editor.getSession().getSelection().getCursor(),
+                 file: self.path
+             }, function(response) {
+                 // TODO handle response codes
+             });
          });
          this.editor.$blockScrolling = Infinity;
          this.setContent(this.content);
