@@ -4,8 +4,8 @@
 <script>
  import ace from "brace";
  import "brace/ext/modelist";
- import languages from "./languages";
-
+ import "./languages";
+ 
  const modelist = ace.acequire("ace/ext/modelist");
  
  export default {
