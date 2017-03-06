@@ -4,6 +4,8 @@
 <script>
  import ace from "brace";
  import "brace/ext/modelist";
+ import "brace/ext/language_tools";
+ import "brace/ext/searchbox";
  import "./languages";
  import io from "../../socketClient";
  
@@ -15,7 +17,8 @@
          const self = this;
          this.editor = ace.edit(this.$el);
          this.editor.setOptions({
-             fontSize: "0.9rem"
+             fontSize: "0.9rem",
+             enableBasicAutocompletion: true
          });
          this.editor.getSession().getSelection().on("changeCursor", function() {
              io.emit("moveCursor", {
