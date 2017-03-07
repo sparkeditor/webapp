@@ -10,11 +10,14 @@
  import io from "../../socketClient";
  
  const modelist = ace.acequire("ace/ext/modelist");
+ const Range = ace.acequire('ace/range').Range;
  
  export default {
      name: "Editor",
      mounted: function() {
          const self = this;
+
+         // EDITOR SETUP
          this.editor = ace.edit(this.$el);
          this.editor.setOptions({
              fontSize: "0.9rem",
@@ -28,8 +31,52 @@
                  // TODO handle response codes
              });
          });
+         this.editor.getSession().on("change", function(e) {
+             // Check if the change was a 'user change' or a programmatic change
+             // TODO will this work in vim mode?
+             if (self.editor.curOp && self.editor.curOp.command.name) {
+                 switch(e.action) {
+                     case "insert":
+                         io.emit("aceInsert", {
+                             file: self.path,
+                             start: e.start,
+                             lines: e.lines
+                         }, function(response) {
+                             // TODO handle response codes
+                         });
+                         break;
+                     case "remove":
+                         io.emit("aceDelete", {
+                             file: self.path,
+                             start: e.start,
+                             end: e.end
+                         }, function(response) {
+                             // TODO handle response codes
+                         });
+                         break;
+                 }
+             }
+         });
          this.editor.$blockScrolling = Infinity;
          this.setContent(this.content);
+
+         // IO SETUP
+         io.on("aceInsert", function(data) {
+             if (data.file && data.file === self.path) {
+                 if (data.position && data.text) {
+                     self.editor.getSession().insert(data.position, data.text);
+                 }
+             }
+         });
+
+         io.on("aceDelete", function(data) {
+             if (data.file && data.file === self.path) {
+                 if (data.start && data.end) {
+                     self.editor.getSession()
+                         .remove(new Range(data.start.row, data.start.column, data.end.row, data.end.column));
+                 }
+             }
+         });
      },
      data() {
          return {
