@@ -66,6 +66,10 @@
                              else if (response.status === statusCodes.ACCESS_DENIED) {
                                  self.authError = true;
                              }
+                             else if (response.status === statusCodes.ENOENT) {
+                                 // TODO
+                                 console.error(response);
+                             }
                              else if (response.status === statusCodes.ERROR) {
                                  self.serverError = true;
                              }
