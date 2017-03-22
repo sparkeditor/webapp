@@ -7,6 +7,7 @@
  import "brace/ext/language_tools";
  import "brace/ext/searchbox";
  import "./languages";
+ import CursorManager from "./cursorManager";
  import io from "../../socketClient";
  
  const modelist = ace.acequire("ace/ext/modelist");
@@ -23,6 +24,8 @@
              fontSize: "0.9rem",
              enableBasicAutocompletion: true
          });
+         this.cursorManager = new CursorManager(this.clients, this.editor.getSession());
+         this.editor.getSession().addDynamicMarker(this.cursorManager, true);
          this.editor.getSession().getSelection().on("changeCursor", function() {
              io.emit("moveCursor", {
                  cursor: self.editor.getSession().getSelection().getCursor(),
@@ -77,9 +80,22 @@
                  }
              }
          });
+
+         io.on("moveCursor", function(data) {
+             if (data.file && data.file === self.path) {
+                 self.cursorManager.setCursor(data.client, data.cursor);
+             }
+         });
+         
+         io.on("open", function(data) {
+             if (data.file && data.file === self.path) {
+                 self.cursorManager.addCursor(data.username, {row: 0, column: 0});
+             }
+         });
      },
      data() {
          return {
+             cursorManager: null,
              editor: null
          }
      },
@@ -100,6 +116,10 @@
              type: String,
              required: true
          },
+         clients: {
+             type: Object,
+             default: {}
+         },
          path: String
      },
      watch: {
@@ -110,9 +130,17 @@
  }
 </script>
 <style lang="scss" scoped>
- .editor {
-     position: relative;
-     width: 100%;
-     height: 100%;
- }
+  .editor {
+      position: relative;
+      width: 100%;
+      height: 100%;
+  }
+</style>
+<style lang="scss">
+  @import "../../scss/colors.scss";
+  
+  .alternateCursor {
+      position: absolute;
+      border-left: 2px solid $teal;
+  }
 </style>

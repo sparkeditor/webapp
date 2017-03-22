@@ -1,6 +1,6 @@
 <template>
     <div class="tabbedWindow">
-        <Editor :content="currentContent" :path="currentFilePath"/>
+        <Editor :content="currentContent" :path="currentFilePath" :clients="currentFileClients"/>
     </div>
 </template>
 <script>
@@ -15,10 +15,16 @@
      },
      computed: {
          currentContent() {
-             if (this.currentFile && this.currentFile.path) {
-                 return this.files[this.currentFile.path] || "";
+             if (this.currentFile && this.currentFile.path && this.files[this.currentFile.path]) {
+                 return this.files[this.currentFile.path].contents || "";
              }
              else return "";
+         },
+         currentFileClients() {
+             if (this.currentFile && this.currentFile.path && this.files[this.currentFile.path]) {
+                 return this.files[this.currentFile.path].clients || {};
+             }
+             else return {};
          },
          currentFilePath() {
              if (this.currentFile) {
@@ -56,7 +62,10 @@
                                  self.authError = false;
                                  self.serverError = false;
                                  const newFileListing = {};
-                                 newFileListing[self.currentFile.path] = response.contents;
+                                 newFileListing[self.currentFile.path] = {
+                                     contents: response.contents,
+                                     clients: response.clients
+                                 }
                                  self.files = Object.assign(
                                      {},
                                      self.files,
