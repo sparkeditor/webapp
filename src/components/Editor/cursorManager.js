@@ -9,7 +9,7 @@ const CursorManager = function(clients, session) {
             if (!self.clients.hasOwnProperty(client)) {
                 continue;
             }
-            const pos = self.clients[client];
+            const pos = self.clients[client].cursor;
             if (pos.row < start) {
                 continue;
             }
@@ -36,7 +36,9 @@ const CursorManager = function(clients, session) {
     }
     
     this.addCursor = function(username, cursor) {
-        this.clients[username] = cursor;
+        this.clients[username] = {
+            cursor: cursor
+        }
         this.redraw();
     }
 
@@ -47,6 +49,11 @@ const CursorManager = function(clients, session) {
     
     this.removeCursor = function(username) {
         delete this.clients[username];
+        this.redraw();
+    }
+
+    this.setClients = function(clients) {
+        this.clients = clients;
         this.redraw();
     }
 

@@ -125,6 +125,7 @@
      watch: {
          content() {
              this.setContent(this.content);
+             this.cursorManager.setClients(this.clients);
          }
      }
  }
