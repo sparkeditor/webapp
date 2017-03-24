@@ -92,6 +92,12 @@
                  self.cursorManager.addCursor(data.username, {row: 0, column: 0});
              }
          });
+
+         io.on("close", function(data) {
+             if (data.file && data.file === self.path) {
+                 self.cursorManager.removeCursor(data.username);
+             }
+         });
      },
      data() {
          return {
