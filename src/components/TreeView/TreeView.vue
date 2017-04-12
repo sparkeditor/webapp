@@ -48,7 +48,8 @@
                  function(response) {
                      self.loading = false;
                      if (response.status === statusCodes.OKAY) {
-                         self.projectInfo = response.projectInfo;
+                         self.$store.commit("setProjectInfo", response.projectInfo);
+                         self.projectInfo = self.$store.state.projectInfo;
                      }
                      else if (response.status === statusCodes.ACCESS_DENIED) {
                          self.authError = true;

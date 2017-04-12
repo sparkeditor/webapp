@@ -8,7 +8,8 @@ const store = new Vuex.Store({
         credentials: null,
         projects: [],
         currentProject: null,
-        currentFile: null
+        currentFile: null,
+        projectInfo: null
     },
     mutations: {
         setCredentials(state, credentials) {
@@ -25,6 +26,9 @@ const store = new Vuex.Store({
         },
         setCurrentFile(state, file) {
             state.currentFile = file;
+        },
+        setProjectInfo(state, projectInfo) {
+            state.projectInfo = projectInfo;
         }
     }
 });
