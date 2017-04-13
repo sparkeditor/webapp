@@ -1,5 +1,8 @@
 <template>
     <div class="appContainer">
+        <div class="row menu">
+            <FileMenu :menu="menu" />
+        </div>
         <div class="row appWrapper">
             <div class="treeView col-2">
                 <TreeView />
@@ -14,22 +17,40 @@
  import {mapState} from 'vuex';
  import TreeView from "../TreeView";
  import TabbedWindow from "../TabbedWindow";
+ import FileMenu from "../FileMenu";
  
  export default {
      name: 'App',
      components: {
          TreeView,
-         TabbedWindow
+         TabbedWindow,
+         FileMenu
      },
      computed: {
          ...mapState([
              'currentFile'
          ])
+     },
+     data() {
+         return {
+             menu: {
+                 File: {
+                     "New File": () => console.log("new file"),
+                     "New Directory": () => console.log("new directory"),
+                     "Save": () => console.log("save")
+                 },
+                 Edit: {
+                     "Undo": () => console.log("undo"),
+                     "Redo": () => console.log("redo")
+                 }
+             }
+         }
      }
  }
 </script>
 <style lang="scss">
  @import "../../scss/grid.scss";
+ @import "../../scss/colors.scss";
  
  html, body {
      width: 100%;
@@ -53,5 +74,10 @@
  .window {
      padding: 0;
      height: 100%;
+     border-left: 1px solid $heather;
+ }
+ .menu {
+     border-bottom: 1px solid $heather;
+     padding-bottom: 0.5em;
  }
 </style>
