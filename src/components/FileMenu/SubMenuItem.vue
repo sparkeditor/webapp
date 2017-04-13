@@ -62,6 +62,7 @@
   }
   .subMenu > .subMenuItem {
       padding-left: 0.5em;
+      padding-right: 0.5em;
   }
   .subMenu > .subMenuItem:hover {
       background-color: $pearl;
