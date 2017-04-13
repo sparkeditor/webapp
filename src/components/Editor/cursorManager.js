@@ -10,6 +10,9 @@ const CursorManager = function(clients, session) {
                 continue;
             }
             const pos = self.clients[client].cursor;
+            if (!pos) {
+                continue;
+            }
             if (pos.row < start) {
                 continue;
             }
