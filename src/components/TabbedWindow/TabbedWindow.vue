@@ -1,6 +1,15 @@
 <template>
     <div class="tabbedWindow">
-        <Editor :content="currentContent" :path="currentFilePath" :clients="currentFileClients"/>
+        <div class="tabs" :style="tabsStyle">
+            <!-- Eventually there will be a v-for in here, but for now only the current file gets a tab -->
+            <div class="tab">{{ currentFileName }}</div>
+        </div>
+        <Editor class="editor"
+                :content="currentContent" 
+                :path="currentFilePath" 
+                :clients="currentFileClients"
+                @change="computeTabsStyle"
+        />
     </div>
 </template>
 <script>
@@ -26,6 +35,14 @@
              }
              else return {};
          },
+         currentFileName() {
+             if (this.currentFile) {
+                 return this.currentFile.path.replace(/^.*?([^\\\/]*)$/, '$1');
+             }
+             else {
+                 return "*scratch*";
+             }
+         },
          currentFilePath() {
              if (this.currentFile) {
                  return this.currentFile.path;
@@ -34,15 +51,28 @@
                  return "";
              }
          }
-     },
+    },
      data() {
          return {
              authError: false,
              serverError: false,
              loading: false,
              // files maps filepaths to contents
-             files: {}
+             files: {},
+             tabsStyle: {}
          }
+     },
+     methods: {
+         computeTabsStyle() {
+             var $gutter = document.getElementsByClassName("ace_gutter")[0];
+             var left = $gutter ? $gutter.offsetWidth : 50;
+             this.tabsStyle = {
+                 left: left + "px"
+             };
+         }
+     }, 
+     mounted() {
+         this.computeTabsStyle();
      },
      props: {
          // current file object
@@ -90,8 +120,25 @@
  }
 </script>
 <style lang="scss" scoped>
+ @import "../../scss/colors.scss";
+
  .tabbedWindow {
      width: 100%;
      height: 100%;
+ }
+ .editor {
+     border-top: 1px solid $heather;
+ }
+ .tabs {
+     text-align: left;
+     position: relative;
+ }
+ .tabs > .tab {
+     padding: 0.5em;
+     width: 150px;
+     border-left: 1px solid $heather;
+     border-right: 1px solid $heather;
+     text-align: center;
+     font-family: "Open Sans", arial, sans-serif;
  }
 </style>
