@@ -59,6 +59,9 @@
                          break;
                  }
              }
+             setTimeout(function() {
+                 self.$emit("change");
+             });
          });
          this.editor.$blockScrolling = Infinity;
          this.setContent(this.content);
