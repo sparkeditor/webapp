@@ -18,6 +18,8 @@
  import TreeView from "../TreeView";
  import TabbedWindow from "../TabbedWindow";
  import FileMenu from "../FileMenu";
+ import io from "../../socketClient";
+ import statusCodes from "../../statusCodes";
  
  export default {
      name: 'App',
@@ -32,12 +34,24 @@
          ])
      },
      data() {
+         const self = this;
          return {
              menu: {
                  File: {
                      "New File": () => console.log("new file"),
                      "New Directory": () => console.log("new directory"),
-                     "Save": () => console.log("save")
+                     "Save": () => {
+                         io.emit("write", 
+                                 { 
+                                     file: self.currentFile.path,
+                                     credentials: self.$store.state.credentials  
+                                 },
+                                 (response) => {
+                                     if (response.status !== statusCodes.OKAY) {
+                                         console.error(response);
+                                     }
+                                 });
+                     }
                  },
                  Edit: {
                      "Undo": () => console.log("undo"),
