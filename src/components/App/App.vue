@@ -2,7 +2,10 @@
     <div class="appContainer">
         <PopupDialog title="Save File As" :show="showSaveAs" :buttons="saveAsButtons">
             <form>
-                <input class="saveAsInput" type="text" v-model="saveAsName" />
+                <div class="confirmMessage" v-if="confirmMessage"> 
+                    File {{ saveAsName }} already exists! Are you sure you want to overwrite it?
+                </div>
+                <input v-else class="saveAsInput" type="text" v-model="saveAsName" />
                 <div class="saveAsMessage" v-if="saveAsMessage !== ''">{{ saveAsMessage }}</div>
             </form>
         </PopupDialog>
@@ -54,6 +57,7 @@
      data() {
          const self = this;
          return {
+             confirmMessage: false,
              menu: {
                  File: {
                      // TODO on create new, open a new 'untitled' buffer
@@ -72,7 +76,7 @@
              },
              saveAsMessage: "",
              showSaveAs: false,
-             saveAsButtons: [
+             initialSaveAsButtons: [
                  {
                      text: 'Cancel',
                      onclick: function() {
@@ -112,12 +116,33 @@
                                      break;
                                  }
                                  // If the file already exists, ask for confirmation
-                                 self.showSaveAs = false;
+                                 self.confirmMessage = true;
+                                 self.saveAsButtons = [
+                                     {
+                                         text: 'Cancel',
+                                         onclick: function() {
+                                             self.saveAsName = self.initialSaveAsName;
+                                             self.showSaveAs = false;
+                                             self.saveAsButtons = self.initialSaveAsButtons;
+                                             self.confirmMessage = false;
+                                         }
+                                     },
+                                     {
+                                         text: 'Confirm',
+                                         onclick: function() {
+                                             self.saveFileAs(self.saveAsName);
+                                             self.showSaveAs = false;
+                                             self.saveAsButtons = self.initialSaveAsButtons;
+                                             self.confirmMessage = false;
+                                         }
+                                     }
+                                 ];
                                  break;
                          }
                      }
                  }
              ],
+             saveAsButtons: [], 
              saveAsName: self.initialSaveAsName,
              delimiter: "/"
          }
@@ -136,7 +161,28 @@
                          console.error(response);
                      }
                  });
+         },
+         saveFileAs(filename) {
+             const self = this;
+
+             const projectPath = self.$store.state.projectInfo.rootDirectory.path;
+             const filepath = projectPath + this.delimiter + filename;
+             io.emit("write",
+                 {
+                     file: filepath,
+                     credentials: self.$store.state.credentials
+                 },
+                 (response) => {
+                     // TODO this won't work - I need to make a new file object
+                     self.$store.commit("setCurrentFile", filepath);
+                     if (response.status !== statusCodes.OKAY) {
+                         console.error(response);
+                     }
+                 });
          }
+     },
+     mounted() {
+         this.saveAsButtons = this.initialSaveAsButtons;
      },
      watch: {
          initialSaveAsName() {
@@ -153,6 +199,7 @@
      width: 100%;
      height: 100%;
      margin: 0;
+     font-family: "Open Sans", arial, sans-serif;
  }
  .appContainer {
      position: fixed;
@@ -185,9 +232,15 @@
     margin-bottom: 1.5em;
     padding: 5px;
     font-size: 1.2rem;
+    background-color: $cream;
  }
  .saveAsInput:focus {
      outline: none;
      border-bottom: 2px solid $raven;
+ }
+ .confirmMessage {
+     margin-bottom: 1.5em;
+     font-family: "Open Sans", arial, sans-serif;
+     font-size: 1.2rem;
  }
 </style>
