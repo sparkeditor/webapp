@@ -153,4 +153,7 @@
       position: absolute;
       border-left: 2px solid $teal;
   }
+  .ace_content {
+      background-color: $cream;
+  }
 </style>
