@@ -40,7 +40,7 @@
                  return this.currentFile.path.replace(/^.*?([^\\\/]*)$/, '$1');
              }
              else {
-                 return "*scratch*";
+                 return "untitled";
              }
          },
          currentFilePath() {
