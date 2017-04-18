@@ -3,6 +3,17 @@ import Vuex from "vuex";
 
 Vue.use(Vuex);
 
+// The following function is meant to be attached to the projectInfo object
+const mapProjectInfo = function(mappingFunc) {
+    mapProjectInfoHelper(this.rootDirectory, mappingFunc);
+}
+const mapProjectInfoHelper = function(fileObject, mappingFunc) {
+    mappingFunc(fileObject);
+    if (fileObject.children) {
+        fileObject.children.forEach((child) => mapProjectInfoHelper(child, mappingFunc));
+    }
+};
+
 const store = new Vuex.Store({
     state: {
         credentials: null,
@@ -29,6 +40,7 @@ const store = new Vuex.Store({
         },
         setProjectInfo(state, projectInfo) {
             state.projectInfo = projectInfo;
+            state.projectInfo.mapProjectInfo = mapProjectInfo;
         }
     }
 });
