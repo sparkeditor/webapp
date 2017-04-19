@@ -134,30 +134,37 @@ export default {
                                     break;
                                 }
                                 // If the file already exists, ask for confirmation
-                                self.confirmMessage = true;
-                                self.saveAsButtons = [
-                                    {
-                                        text: "Cancel",
-                                        onclick: function() {
-                                            self.saveAsName =
-                                                self.initialSaveAsName;
-                                            self.showSaveAs = false;
-                                            self.saveAsButtons =
-                                                self.initialSaveAsButtons;
-                                            self.confirmMessage = false;
+                                if (fileExists) {
+                                    self.confirmMessage = true;
+                                    self.saveAsButtons = [
+                                        {
+                                            text: "Cancel",
+                                            onclick: function() {
+                                                self.saveAsName =
+                                                    self.initialSaveAsName;
+                                                self.showSaveAs = false;
+                                                self.saveAsButtons =
+                                                    self.initialSaveAsButtons;
+                                                self.confirmMessage = false;
+                                            }
+                                        },
+                                        {
+                                            text: "Confirm",
+                                            onclick: function() {
+                                                self.saveFileAs(self.saveAsName);
+                                                self.showSaveAs = false;
+                                                self.saveAsButtons =
+                                                    self.initialSaveAsButtons;
+                                                self.confirmMessage = false;
+                                            }
                                         }
-                                    },
-                                    {
-                                        text: "Confirm",
-                                        onclick: function() {
-                                            self.saveFileAs(self.saveAsName);
-                                            self.showSaveAs = false;
-                                            self.saveAsButtons =
-                                                self.initialSaveAsButtons;
-                                            self.confirmMessage = false;
-                                        }
-                                    }
-                                ];
+                                    ];
+                                    break;
+                                }
+                                // Otherwise, save the file as a new file
+                                self.saveFileAsNew(self.saveAsName);
+                                self.showSaveAs = false;
+                                // TODO switch current file to new filename
                                 break;
                         }
                     }
