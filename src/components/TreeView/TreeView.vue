@@ -16,60 +16,65 @@
     </div>
 </template>
 <script>
- import {mapState} from "vuex";
- import io from "../../socketClient";
- import statusCodes from "../../statusCodes";
- import TreeItem from "./TreeItem";
- 
- export default {
-     name: "TreeView",
-     computed: {
-         ...mapState([
-             'credentials',
-             'currentProject'
-         ])
-     },
-     components: {
-         TreeItem
-     },
-     data() {
-         return {
-             loading: false,
-             projectInfo: null,
-             authError: false,
-             serverError:  false
-         }
-     },
-     mounted() {
-         const self = this;
-         this.loading = true;
-         io.emit("openProject",
-                 { credentials: this.credentials, projectId: this.currentProject.id },
-                 function(response) {
-                     self.loading = false;
-                     if (response.status === statusCodes.OKAY) {
-                         self.$store.commit("setProjectInfo", response.projectInfo);
-                         self.projectInfo = self.$store.state.projectInfo;
-                     }
-                     else if (response.status === statusCodes.ACCESS_DENIED) {
-                         self.authError = true;
-                     }
-                     else {
-                         self.serverError = true;
-                     }
-                 });
-         io.on("create", function(data) {
-             if (data.projectId === self.currentProject.id) {
-                 self.$store.commit("addFileToProjectInfo", {filename: data.file});
-             }
-         });
-         io.on("createDir", function(data) {
-             if (data.projectId === self.currentProject.id) {
-                 self.$store.commit("addFileToProjectInfo", {filename: data.file, isDir: true});
-             }
-         });
-     }
- }
+import { mapState } from "vuex";
+import io from "../../socketClient";
+import statusCodes from "../../statusCodes";
+import TreeItem from "./TreeItem";
+
+export default {
+    name: "TreeView",
+    computed: {
+        ...mapState(["credentials", "currentProject"])
+    },
+    components: {
+        TreeItem
+    },
+    data() {
+        return {
+            loading: false,
+            projectInfo: null,
+            authError: false,
+            serverError: false
+        };
+    },
+    mounted() {
+        const self = this;
+        this.loading = true;
+        io.emit(
+            "openProject",
+            {
+                credentials: this.credentials,
+                projectId: this.currentProject.id
+            },
+            function(response) {
+                self.loading = false;
+                if (response.status === statusCodes.OKAY) {
+                    self.$store.commit("setProjectInfo", response.projectInfo);
+                    self.projectInfo = self.$store.state.projectInfo;
+                } else if (response.status === statusCodes.ACCESS_DENIED) {
+                    self.authError = true;
+                } else {
+                    self.serverError = true;
+                }
+            }
+        );
+        io.on("create", function(data) {
+            if (data.projectId === self.currentProject.id) {
+                self.$store.commit("addFileToProjectInfo", {
+                    filename: data.file
+                });
+            }
+        });
+        io.on("createDir", function(data) {
+            if (data.projectId === self.currentProject.id) {
+                self.$store.commit("addFileToProjectInfo", {
+                    filename: data.file,
+                    isDir: true
+                });
+            }
+        });
+    }
+};
 </script>
 <style lang="scss" scoped>
  @import "../../scss/colors.scss";

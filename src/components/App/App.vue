@@ -65,7 +65,8 @@ export default {
             menu: {
                 File: {
                     // TODO on create new, open a new 'untitled' buffer
-                    "New File": () => self.$store.commit("setCurrentFile", null),
+                    "New File": () =>
+                        self.$store.commit("setCurrentFile", null),
                     "New Directory": () => console.log("new directory"),
                     // TODO if current buffer is 'untitled', do a save as instead
                     Save: () => {

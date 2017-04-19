@@ -32,11 +32,13 @@ const store = new Vuex.Store({
             // Calls mappingFunc on each file item in the projectInfo
             const mapProjectInfo = function(mappingFunc) {
                 mapProjectInfoHelper(this.rootDirectory, mappingFunc);
-            }
+            };
             const mapProjectInfoHelper = function(fileObject, mappingFunc) {
                 mappingFunc(fileObject);
                 if (fileObject.children) {
-                    fileObject.children.forEach((child) => mapProjectInfoHelper(child, mappingFunc));
+                    fileObject.children.forEach(child =>
+                        mapProjectInfoHelper(child, mappingFunc)
+                    );
                 }
             };
 
@@ -50,9 +52,10 @@ const store = new Vuex.Store({
             const newState = Object.assign({}, state);
 
             const insertNewFileHelper = function(fileObject, filename, isDir) {
-                const filepath = state.projectInfo.rootDirectory.path + 
-                                 state.projectInfo.delimiter +
-                                 filename;
+                const filepath =
+                    state.projectInfo.rootDirectory.path +
+                    state.projectInfo.delimiter +
+                    filename;
                 // If the filepath is the path of this file, return
                 if (fileObject.path === filepath) {
                     return;
@@ -60,33 +63,52 @@ const store = new Vuex.Store({
                 // If the filepath suggests the the new file is a child of this file,
                 // create the next file in the chain and recurse
                 if (filepath.search(fileObject.path) === 0) {
-                    const remainingPath = filepath.substr(fileObject.path.length + 1);
+                    const remainingPath = filepath.substr(
+                        fileObject.path.length + 1
+                    );
                     const remainingPathParts = remainingPath.split(/[\/\\]/);
                     if (remainingPathParts.length === 1) {
                         const newFile = {
                             name: remainingPathParts[0],
-                            path: fileObject.path + delimiter + remainingPathParts[0]
-                        }
+                            path: fileObject.path +
+                                delimiter +
+                                remainingPathParts[0]
+                        };
                         // Figure out whether to create a file or directory
                         if (isDir) {
-                            newFile.type = 'directory';
+                            newFile.type = "directory";
                         }
-                        const childrenLength = fileObject.children.push(newFile);
+                        const childrenLength = fileObject.children.push(
+                            newFile
+                        );
                         // Recurse to reach base case
-                        insertNewFileHelper(fileObject.children[childrenLength - 1], filepath, isDir);
-                    }
-                    else {
+                        insertNewFileHelper(
+                            fileObject.children[childrenLength - 1],
+                            filepath,
+                            isDir
+                        );
+                    } else {
                         // Create a new directory and recurse
                         const childrenLength = fileObject.children.push({
                             name: remainingPathParts[0],
-                            path: fileObject.path + delimiter + remainingPathParts[0], 
-                            type: 'directory'
+                            path: fileObject.path +
+                                delimiter +
+                                remainingPathParts[0],
+                            type: "directory"
                         });
-                        insertNewFileHelper(fileObject.children[childrenLength - 1], filepath, isDir);
+                        insertNewFileHelper(
+                            fileObject.children[childrenLength - 1],
+                            filepath,
+                            isDir
+                        );
                     }
                 }
-            }
-            insertNewFileHelper(newState.projectInfo.rootDirectory, filename, isDir);
+            };
+            insertNewFileHelper(
+                newState.projectInfo.rootDirectory,
+                filename,
+                isDir
+            );
             state = newState;
         },
         setEditor(state, editor) {
