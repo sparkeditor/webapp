@@ -60,12 +60,12 @@
                  });
          io.on("create", function(data) {
              if (data.projectId === self.currentProject.id) {
-                 self.$store.commit("addFileToProjectInfo", data.file);
+                 self.$store.commit("addFileToProjectInfo", {filename: data.file});
              }
          });
          io.on("createDir", function(data) {
              if (data.projectId === self.currentProject.id) {
-                 self.$store.commit("addFileToProjectInfo", data.file, true);
+                 self.$store.commit("addFileToProjectInfo", {filename: data.file, isDir: true});
              }
          });
      }

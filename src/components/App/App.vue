@@ -65,7 +65,7 @@ export default {
             menu: {
                 File: {
                     // TODO on create new, open a new 'untitled' buffer
-                    "New File": () => console.log("new file"),
+                    "New File": () => self.$store.commit("setCurrentFile", null),
                     "New Directory": () => console.log("new directory"),
                     // TODO if current buffer is 'untitled', do a save as instead
                     Save: () => {
@@ -274,7 +274,7 @@ export default {
                 self.$store.state.projectInfo.rootDirectory.path;
             const filepath = projectPath + this.delimiter + filename;
 
-            // Create a new file with filename (make sure tree view updates)
+            // Create a new file with filename
             io.emit(
                 "create",
                 {
@@ -288,7 +288,7 @@ export default {
                     } else {
                         // Write editor contents to it
                         io.emit(
-                            "setFileContents",
+                            "setFileContent",
                             {
                                 file: filepath,
                                 content: self.$store.state.editor.getValue(),
@@ -356,7 +356,6 @@ export default {
                     }
                 }
             );
-            // Set file as current file
         }
     },
     mounted() {

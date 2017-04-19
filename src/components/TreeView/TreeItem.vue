@@ -99,7 +99,7 @@
          },
          type: {
              type: String,
-             required: true
+             default: ""
          },
          path: {
              type: String,

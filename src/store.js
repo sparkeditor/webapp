@@ -43,8 +43,16 @@ const store = new Vuex.Store({
             state.projectInfo = projectInfo;
             state.projectInfo.mapProjectInfo = mapProjectInfo;
         },
-        addFileToProjectInfo(state, filepath, isDir) {
-            const insertNewFileHelper = function(fileObject, filepath, isDir) {
+        addFileToProjectInfo(state, payload) {
+            const filename = payload.filename;
+            const isDir = payload.isDir;
+            const delimiter = state.projectInfo.delimiter;
+            const newState = Object.assign({}, state);
+
+            const insertNewFileHelper = function(fileObject, filename, isDir) {
+                const filepath = state.projectInfo.rootDirectory.path + 
+                                 state.projectInfo.delimiter +
+                                 filename;
                 // If the filepath is the path of this file, return
                 if (fileObject.path === filepath) {
                     return;
@@ -52,11 +60,10 @@ const store = new Vuex.Store({
                 // If the filepath suggests the the new file is a child of this file,
                 // create the next file in the chain and recurse
                 if (filepath.search(fileObject.path) === 0) {
-                    const delimiter = filepath.substr(fileObject.path.length, 1);
                     const remainingPath = filepath.substr(fileObject.path.length + 1);
                     const remainingPathParts = remainingPath.split(/[\/\\]/);
                     if (remainingPathParts.length === 1) {
-                        newFile = {
+                        const newFile = {
                             name: remainingPathParts[0],
                             path: fileObject.path + delimiter + remainingPathParts[0]
                         }
@@ -79,7 +86,8 @@ const store = new Vuex.Store({
                     }
                 }
             }
-            insertNewFileHelper(state.projectInfo.rootDirectory, filepath, isDir);
+            insertNewFileHelper(newState.projectInfo.rootDirectory, filename, isDir);
+            state = newState;
         },
         setEditor(state, editor) {
             state.editor = editor;
