@@ -1,29 +1,30 @@
-import Vue from 'vue';
-import VueRouter from 'vue-router';
+import Vue from "vue";
+import VueRouter from "vue-router";
 import store from "./store";
-import App from './components/App';
-import Login from './components/Login';
-import ProjectChooser from './components/ProjectChooser';
-import ProjectCreator from './components/ProjectCreator';
-import CreateAccount from './components/CreateAccount';
+import App from "./components/App";
+import Login from "./components/Login";
+import ProjectChooser from "./components/ProjectChooser";
+import ProjectCreator from "./components/ProjectCreator";
+import CreateAccount from "./components/CreateAccount";
 
 Vue.use(VueRouter);
 
 const routes = [
-    {path: "/", redirect: () => {
-        // TODO if there is a user in a cookie/web worker, redirect to app
-        return "/login";
-    }},
-    {path: "/login", component: Login},
-    {path: "/create-account", component: CreateAccount},
+    {
+        path: "/",
+        redirect: () => {
+            // TODO if there is a user in a cookie/web worker, redirect to app
+            return "/login";
+        }
+    },
+    { path: "/login", component: Login },
+    { path: "/create-account", component: CreateAccount },
     {
         path: "/projects",
         component: ProjectChooser,
-        children: [
-            {path: "new", component: ProjectCreator}
-        ]
+        children: [{ path: "new", component: ProjectCreator }]
     },
-    {path: "/editor", component: App}
+    { path: "/editor", component: App }
 ];
 
 const router = new VueRouter({
@@ -34,4 +35,4 @@ const router = new VueRouter({
 new Vue({
     router,
     store
-}).$mount('#app');
+}).$mount("#app");
