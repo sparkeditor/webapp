@@ -426,6 +426,10 @@ export default {
         }
     },
     mounted() {
+        if (!this.$store.state.credentials) {
+            this.$router.push('401'); 
+        }
+        // TODO handle case of no project loaded
         this.saveAsButtons = this.initialSaveAsButtons;
     },
     watch: {

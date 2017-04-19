@@ -3,6 +3,7 @@ import VueRouter from "vue-router";
 import store from "./store";
 import App from "./components/App";
 import Login from "./components/Login";
+import Unauthorized from "./components/Unauthorized";
 import ProjectChooser from "./components/ProjectChooser";
 import ProjectCreator from "./components/ProjectCreator";
 import CreateAccount from "./components/CreateAccount";
@@ -24,7 +25,8 @@ const routes = [
         component: ProjectChooser,
         children: [{ path: "new", component: ProjectCreator }]
     },
-    { path: "/editor", component: App }
+    { path: "/editor", component: App },
+    { path: "/401", component: Unauthorized }
 ];
 
 const router = new VueRouter({
