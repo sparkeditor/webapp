@@ -255,6 +255,12 @@ export default {
                     }
                 }
             );
+        },
+        saveFileAsNew(filename) {
+            // TODO
+            // Create a new file with filename (make sure tree view updates)
+            // Write editor contents to it
+            // Set file as current file
         }
     },
     mounted() {
