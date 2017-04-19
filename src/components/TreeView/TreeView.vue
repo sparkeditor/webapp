@@ -58,6 +58,16 @@
                          self.serverError = true;
                      }
                  });
+         io.on("create", function(data) {
+             if (data.projectId === self.currentProject.id) {
+                 self.$store.commit("addFileToProjectInfo", data.file);
+             }
+         });
+         io.on("createDir", function(data) {
+             if (data.projectId === self.currentProject.id) {
+                 self.$store.commit("addFileToProjectInfo", data.file, true);
+             }
+         });
      }
  }
 </script>

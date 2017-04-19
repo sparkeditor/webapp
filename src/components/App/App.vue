@@ -68,14 +68,20 @@ export default {
                     "New File": () => console.log("new file"),
                     "New Directory": () => console.log("new directory"),
                     // TODO if current buffer is 'untitled', do a save as instead
-                    Save: self.saveCurrentFile,
+                    Save: () => {
+                        if (!self.currentFile) {
+                            self.showSaveAs = true;
+                        } else {
+                            self.saveCurrentFile();
+                        }
+                    },
                     "Save As": () => {
                         self.showSaveAs = true;
                     }
                 },
                 Edit: {
-                    Undo: () => console.log("undo"),
-                    Redo: () => console.log("redo")
+                    Undo: () => self.$store.state.editor.undo(),
+                    Redo: () => self.$store.state.editor.redo()
                 }
             },
             saveAsMessage: "",
@@ -166,7 +172,6 @@ export default {
                                 // Otherwise, save the file as a new file
                                 self.saveFileAsNew(self.saveAsName);
                                 self.showSaveAs = false;
-                                // TODO switch current file to new filename
                                 break;
                         }
                     }
@@ -238,8 +243,15 @@ export default {
                                                 console.error(response);
                                             } else {
                                                 // Load up the file
+                                                const fileParts = filename.split(
+                                                    /[\/\\]/
+                                                );
+                                                const name =
+                                                    fileParts[
+                                                        fileParts.length - 1
+                                                    ];
                                                 const file = {
-                                                    name: filename,
+                                                    name: name,
                                                     path: filepath
                                                 };
                                                 self.$store.commit(
@@ -257,9 +269,93 @@ export default {
             );
         },
         saveFileAsNew(filename) {
-            // TODO
+            const self = this;
+            const projectPath =
+                self.$store.state.projectInfo.rootDirectory.path;
+            const filepath = projectPath + this.delimiter + filename;
+
             // Create a new file with filename (make sure tree view updates)
-            // Write editor contents to it
+            io.emit(
+                "create",
+                {
+                    projectId: self.$store.state.currentProject.id,
+                    credentials: self.$store.state.credentials,
+                    file: filename
+                },
+                response => {
+                    if (response.status !== statusCodes.OKAY) {
+                        console.error(response);
+                    } else {
+                        // Write editor contents to it
+                        io.emit(
+                            "setFileContents",
+                            {
+                                file: filepath,
+                                content: self.$store.state.editor.getValue(),
+                                credentials: self.$store.state.credentials
+                            },
+                            response => {
+                                if (response.status !== statusCodes.OKAY) {
+                                    console.error(response);
+                                } else {
+                                    io.emit(
+                                        "write",
+                                        {
+                                            file: filepath,
+                                            credentials: self.$store.state
+                                                .credentials
+                                        },
+                                        response => {
+                                            if (
+                                                response.status !==
+                                                statusCodes.OKAY
+                                            ) {
+                                                console.error(response);
+                                            } else {
+                                                io.emit(
+                                                    "open",
+                                                    {
+                                                        file: filepath,
+                                                        credentials: self.$store
+                                                            .state.credentials
+                                                    },
+                                                    response => {
+                                                        if (
+                                                            response.status !==
+                                                            statusCodes.OKAY
+                                                        ) {
+                                                            console.error(
+                                                                response
+                                                            );
+                                                        } else {
+                                                            const fileParts = filename.split(
+                                                                /[\/\\]/
+                                                            );
+                                                            const name =
+                                                                fileParts[
+                                                                    fileParts.length -
+                                                                        1
+                                                                ];
+                                                            const file = {
+                                                                name: name,
+                                                                path: filepath
+                                                            };
+                                                            self.$store.commit(
+                                                                "setCurrentFile",
+                                                                file
+                                                            );
+                                                        }
+                                                    }
+                                                );
+                                            }
+                                        }
+                                    );
+                                }
+                            }
+                        );
+                    }
+                }
+            );
             // Set file as current file
         }
     },
