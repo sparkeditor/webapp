@@ -49,8 +49,8 @@ export default {
             const projectPath = this.$store.state.projectInfo.rootDirectory
                 .path;
             this.delimiter = filepath.substr(
-                filepath.search(projectPath),
-                filepath.search(projectPath) + projectPath.length
+                filepath.search(projectPath) + projectPath.length,
+                1
             );
             return filepath.substr(
                 filepath.search(projectPath) + projectPath.length + 1
@@ -151,7 +151,9 @@ export default {
                                         {
                                             text: "Confirm",
                                             onclick: function() {
-                                                self.saveFileAs(self.saveAsName);
+                                                self.saveFileAs(
+                                                    self.saveAsName
+                                                );
                                                 self.showSaveAs = false;
                                                 self.saveAsButtons =
                                                     self.initialSaveAsButtons;
@@ -198,17 +200,58 @@ export default {
             const projectPath =
                 self.$store.state.projectInfo.rootDirectory.path;
             const filepath = projectPath + this.delimiter + filename;
+            // Set the file contents
             io.emit(
-                "write",
+                "setFileContent",
                 {
                     file: filepath,
+                    content: self.$store.state.editor.getValue(),
                     credentials: self.$store.state.credentials
                 },
                 response => {
-                    // TODO this won't work - I need to make a new file object
-                    self.$store.commit("setCurrentFile", filepath);
                     if (response.status !== statusCodes.OKAY) {
                         console.error(response);
+                    } else {
+                        // Write the file
+                        io.emit(
+                            "write",
+                            {
+                                file: filepath,
+                                credentials: self.$store.state.credentials
+                            },
+                            response => {
+                                if (response.status !== statusCodes.OKAY) {
+                                    console.error(response);
+                                } else {
+                                    io.emit(
+                                        "open",
+                                        {
+                                            file: filepath,
+                                            credentials: self.$store.state
+                                                .credentials
+                                        },
+                                        response => {
+                                            if (
+                                                response.status !==
+                                                statusCodes.OKAY
+                                            ) {
+                                                console.error(response);
+                                            } else {
+                                                // Load up the file
+                                                const file = {
+                                                    name: filename,
+                                                    path: filepath
+                                                };
+                                                self.$store.commit(
+                                                    "setCurrentFile",
+                                                    file
+                                                );
+                                            }
+                                        }
+                                    );
+                                }
+                            }
+                        );
                     }
                 }
             );

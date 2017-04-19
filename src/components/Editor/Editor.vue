@@ -19,7 +19,8 @@
          const self = this;
 
          // EDITOR SETUP
-         this.editor = ace.edit(this.$el);
+         this.$store.commit("setEditor", ace.edit(this.$el));
+         this.editor = this.$store.state.editor;
          this.editor.setOptions({
              fontSize: "0.9rem",
              enableBasicAutocompletion: true
@@ -99,6 +100,12 @@
          io.on("close", function(data) {
              if (data.file && data.file === self.path) {
                  self.cursorManager.removeCursor(data.username);
+             }
+         });
+
+         io.on("setFileContent", function(data) {
+             if (data.file && data.file === self.path) {
+                 self.setContent(data.content);
              }
          });
      },

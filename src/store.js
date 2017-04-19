@@ -20,7 +20,8 @@ const store = new Vuex.Store({
         projects: [],
         currentProject: null,
         currentFile: null,
-        projectInfo: null
+        projectInfo: null,
+        editor: null
     },
     mutations: {
         setCredentials(state, credentials) {
@@ -41,6 +42,9 @@ const store = new Vuex.Store({
         setProjectInfo(state, projectInfo) {
             state.projectInfo = projectInfo;
             state.projectInfo.mapProjectInfo = mapProjectInfo;
+        },
+        setEditor(state, editor) {
+            state.editor = editor;
         }
     }
 });
