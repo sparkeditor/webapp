@@ -429,7 +429,9 @@ export default {
         if (!this.$store.state.credentials) {
             this.$router.push('401'); 
         }
-        // TODO handle case of no project loaded
+        if (!this.$store.state.currentProject) {
+            this.$router.push('projects');
+        }
         this.saveAsButtons = this.initialSaveAsButtons;
     },
     watch: {
