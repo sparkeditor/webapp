@@ -69,11 +69,12 @@ const store = new Vuex.Store({
                     );
                     const remainingPathParts = remainingPath.split(/[\/\\]/);
                     // Does the child already exist?
-                    const existingChild = fileObject.children.filter(
-                        child => {
-                            return child.name === remainingPathParts[0]
-                        }
-                    )[0];
+                    let existingChild = false;
+                    if (fileObject.children) {
+                        existingChild = fileObject.children.filter(child => {
+                            return child.name === remainingPathParts[0];
+                        })[0];
+                    }
                     if (existingChild) {
                         insertNewFileHelper(existingChild, filename, isDir);
                     } else {
@@ -90,6 +91,9 @@ const store = new Vuex.Store({
                             } else {
                                 newFile.type = path.extname(filepath) || "";
                             }
+                            if (!fileObject.children) {
+                                fileObject.children = [];
+                            }
                             const childrenLength = fileObject.children.push(
                                 newFile
                             );
@@ -101,6 +105,9 @@ const store = new Vuex.Store({
                             );
                         } else {
                             // Create a new directory and recurse
+                            if (!fileObject.children) {
+                                fileObject.children = [];
+                            }
                             const childrenLength = fileObject.children.push({
                                 name: remainingPathParts[0],
                                 path: fileObject.path +
