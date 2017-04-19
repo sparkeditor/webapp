@@ -9,7 +9,7 @@
                       :startExpanded="true"
             />
         </div>
-        <div v-if="loading">
+        <div class="loading" v-if="loading">
             <i class="fa fa-lg fa-spinner fa-spin fa-3x" aria-hidden="true"></i>
             <span class="sr-only">Loading...</span>
         </div>
@@ -96,5 +96,8 @@ export default {
  .tree {
      margin-top: .5rem;
      margin-left: .5rem;
+ }
+ .loading {
+     margin-top: 1.5rem;
  }
 </style>
