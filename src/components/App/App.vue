@@ -9,6 +9,12 @@
                 <div class="saveAsMessage" v-if="saveAsMessage !== ''">{{ saveAsMessage }}</div>
             </form>
         </PopupDialog>
+        <PopupDialog title="Create New Directory" :show="showNewDir" :buttons="newDirButtons">
+            <form>
+                <input class="newDirInput" type="text" v-model="newDirName" />
+                <div class="newDirMessage" v-if="newDirMessage !== ''">{{ newDirMessage }}</div>
+            </form>
+        </PopupDialog>
         <div class="row menu">
             <FileMenu :menu="menu" />
         </div>
@@ -67,8 +73,7 @@ export default {
                     // TODO on create new, open a new 'untitled' buffer
                     "New File": () =>
                         self.$store.commit("setCurrentFile", null),
-                    "New Directory": () => console.log("new directory"),
-                    // TODO if current buffer is 'untitled', do a save as instead
+                    "New Directory": () => self.showNewDir = true,
                     Save: () => {
                         if (!self.currentFile) {
                             self.showSaveAs = true;
@@ -87,11 +92,72 @@ export default {
             },
             saveAsMessage: "",
             showSaveAs: false,
+            showNewDir: false,
+            newDirName: "",
+            newDirMessage: "",
+            newDirButtons: [
+                {
+                    text: "Cancel",
+                    onclick: function() {
+                        self.newDirName = "";
+                        self.newDirMessage = "";
+                        self.showNewDir = false;
+                    }
+                },
+                {
+                    text: "Create Directory",
+                    onclick: function() {
+                        if (self.newDirName === "") {
+                            self.newDirMessage = "Path cannot be blank";
+                        } else {
+                            // Check if path is valid
+                            let dirExists = false;
+                            const projectPath =
+                                self.$store.state.projectInfo.rootDirectory
+                                    .path;
+                            const fullPath =
+                                projectPath + self.delimiter + self.newDirName;
+                            self.$store.state.projectInfo.mapProjectInfo(
+                                fileObject => {
+                                    if (fileObject.path === fullPath) {
+                                        dirExists = true;
+                                    }
+                                }
+                            );
+                            if (dirExists) {
+                                self.newDirMessage = "Directory already exists";
+                            } else {
+                                io.emit(
+                                    "createDir",
+                                    {
+                                        credentials: self.$store.state
+                                            .credentials,
+                                        projectId: self.$store.state
+                                            .currentProject.id,
+                                        directory: self.newDirName
+                                    },
+                                    response => {
+                                        self.showNewDir = false;
+                                        self.newDirName = "";
+                                        self.newDirMessage = "";
+                                        if (
+                                            response.status !== statusCodes.OKAY
+                                        ) {
+                                            console.error(response);
+                                        }
+                                    }
+                                );
+                            }
+                        }
+                    }
+                }
+            ],
             initialSaveAsButtons: [
                 {
                     text: "Cancel",
                     onclick: function() {
                         self.saveAsName = self.initialSaveAsName;
+                        self.saveAsMessage = "";
                         self.showSaveAs = false;
                     }
                 },
@@ -402,7 +468,7 @@ export default {
      border-bottom: 1px solid $heather;
      padding-bottom: 0.5em;
  }
- .saveAsInput {
+ .saveAsInput, .newDirInput {
     border: none;
     border-bottom: 2px solid $sterling;
     box-shadow: none;
@@ -412,7 +478,7 @@ export default {
     font-size: 1.2rem;
     background-color: $cream;
  }
- .saveAsInput:focus {
+ .saveAsInput:focus, .newDirInput:focus {
      outline: none;
      border-bottom: 2px solid $raven;
  }

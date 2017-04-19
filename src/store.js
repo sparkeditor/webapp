@@ -1,5 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
+import path from "path";
 
 Vue.use(Vuex);
 
@@ -61,46 +62,58 @@ const store = new Vuex.Store({
                     return;
                 }
                 // If the filepath suggests the the new file is a child of this file,
-                // create the next file in the chain and recurse
+                // recurse, either into the proper child or creating the child if necessary
                 if (filepath.search(fileObject.path) === 0) {
                     const remainingPath = filepath.substr(
                         fileObject.path.length + 1
                     );
                     const remainingPathParts = remainingPath.split(/[\/\\]/);
-                    if (remainingPathParts.length === 1) {
-                        const newFile = {
-                            name: remainingPathParts[0],
-                            path: fileObject.path +
-                                delimiter +
-                                remainingPathParts[0]
-                        };
-                        // Figure out whether to create a file or directory
-                        if (isDir) {
-                            newFile.type = "directory";
+                    // Does the child already exist?
+                    const existingChild = fileObject.children.filter(
+                        child => {
+                            return child.name === remainingPathParts[0]
                         }
-                        const childrenLength = fileObject.children.push(
-                            newFile
-                        );
-                        // Recurse to reach base case
-                        insertNewFileHelper(
-                            fileObject.children[childrenLength - 1],
-                            filepath,
-                            isDir
-                        );
+                    )[0];
+                    if (existingChild) {
+                        insertNewFileHelper(existingChild, filename, isDir);
                     } else {
-                        // Create a new directory and recurse
-                        const childrenLength = fileObject.children.push({
-                            name: remainingPathParts[0],
-                            path: fileObject.path +
-                                delimiter +
-                                remainingPathParts[0],
-                            type: "directory"
-                        });
-                        insertNewFileHelper(
-                            fileObject.children[childrenLength - 1],
-                            filepath,
-                            isDir
-                        );
+                        if (remainingPathParts.length === 1) {
+                            const newFile = {
+                                name: remainingPathParts[0],
+                                path: fileObject.path +
+                                    delimiter +
+                                    remainingPathParts[0]
+                            };
+                            // Figure out whether to create a file or directory
+                            if (isDir) {
+                                newFile.type = "directory";
+                            } else {
+                                newFile.type = path.extname(filepath) || "";
+                            }
+                            const childrenLength = fileObject.children.push(
+                                newFile
+                            );
+                            // Recurse to reach base case
+                            insertNewFileHelper(
+                                fileObject.children[childrenLength - 1],
+                                filename,
+                                isDir
+                            );
+                        } else {
+                            // Create a new directory and recurse
+                            const childrenLength = fileObject.children.push({
+                                name: remainingPathParts[0],
+                                path: fileObject.path +
+                                    delimiter +
+                                    remainingPathParts[0],
+                                type: "directory"
+                            });
+                            insertNewFileHelper(
+                                fileObject.children[childrenLength - 1],
+                                filename,
+                                isDir
+                            );
+                        }
                     }
                 }
             };

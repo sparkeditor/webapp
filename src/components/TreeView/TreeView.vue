@@ -68,7 +68,7 @@ export default {
         io.on("createDir", function(data) {
             if (data.projectId === self.currentProject.id) {
                 self.$store.commit("addFileToProjectInfo", {
-                    filename: data.file,
+                    filename: data.directory,
                     isDir: true
                 });
             }
