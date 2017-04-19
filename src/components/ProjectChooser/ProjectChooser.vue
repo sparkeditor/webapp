@@ -15,7 +15,7 @@
                 </li>
             </ul>
             <button class="createProjectButton" @click.prevent="handleNewProjectClick"
-                    v-if="showNewProjectButton">
+                    v-if="shouldShowNewProjectButton">
                 <i class="fa fa-lg fa-plus" aria-hidden="true"></i>
                 <span>Create New Project</span>
             </button>
@@ -29,6 +29,7 @@
 <script>
  import {mapState} from "vuex";
  import Container from "../Container";
+ import io from "../../socketClient";
  
  export default {
      name: "ProjectChooser",
@@ -36,10 +37,48 @@
          Container
      },
      computed: {
+         shouldShowNewProjectButton() {
+             if (this.$route.path === "/projects/new") {
+                 return false;
+             }
+             else {
+                 return this.showNewProjectButton;
+             }
+         },
          ...mapState([
              'credentials',
              'projects'
          ])
+     },
+     created() {
+         const self = this;
+
+         if (!this.credentials) {
+             const storedCredentials = localStorage.getItem("credentials");
+             const storedProjects = localStorage.getItem("projects");
+             if (storedCredentials && storedProjects) {
+                 const credentials = JSON.parse(storedCredentials);
+                 const projects = JSON.parse(storedProjects);
+                 this.$store.commit("setCredentials", credentials);
+                 this.$store.commit("setProjects", projects);
+             }
+         }
+         else {
+             io.emit("authorize", {credentials: this.credentials}, response => {
+                 if (response.status === statusCodes.OKAY) {
+                     self.$store.commit("setCredentials", credentials);
+                     self.$store.commit("setProjects", response.projects);
+                     localStorage.setItem("credentials", JSON.stringify(credentials));
+                     localStorage.setItem("projects", JSON.stringify(response.projects));
+                 }
+                 else if (response.status === statusCodes.ACCESS_DENIED) {
+                     self.$router.push('401');
+                 }
+                 else {
+                     console.error(response);
+                 }
+             });
+         }
      },
      data() {
          return {
@@ -56,6 +95,7 @@
          },
          handleProjectClick(project) {
              this.$store.commit("setCurrentProject", project);
+             localStorage.setItem("currentProject", JSON.stringify(project));
              this.$router.push("/editor");
          },
          setActive(project) {

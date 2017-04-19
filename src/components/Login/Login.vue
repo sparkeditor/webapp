@@ -60,6 +60,8 @@
                  if (result.status === statusCodes.OKAY) {
                      self.$store.commit("setCredentials", credentials);
                      self.$store.commit("setProjects", result.projects);
+                     localStorage.setItem("credentials", JSON.stringify(credentials));
+                     localStorage.setItem("projects", JSON.stringify(result.projects));
                      self.$router.push("/projects");
                  }
                  else if (result.status === statusCodes.ACCESS_DENIED) {

@@ -8,6 +8,7 @@
             <button type="submit" name="submit" value="Create Project" :disabled="projectName == ''">
                 Create Project
             </button>
+            <button type="button" @click="cancel">Cancel</button>
         </form>
         <div class="errorMessage">
             <p v-if="serverError">Sorry, something went wrong! Try again later.</p>
@@ -33,6 +34,9 @@
          };
      },
      methods: {
+         cancel() {
+             this.$router.push('/projects');
+         },
          handleSubmit(event) {
              const self = this;
              const credentials = self.$store.state.credentials;
@@ -42,6 +46,8 @@
                          if (response.status === statusCodes.OKAY) {
                              self.$store.commit("addProject", response.project);
                              self.$store.commit("setCurrentProject", response.project);
+                             localStorage.setItem("projects", JSON.stringify(self.$store.state.projects));
+                             localStorage.setItem("currentProject", JSON.stringify(response.project));
                              self.$router.push("/editor");
                          }
                          else if (response.status === statusCodes.ACCESS_DENIED) {

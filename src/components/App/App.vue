@@ -64,6 +64,28 @@ export default {
         },
         ...mapState(["currentFile"])
     },
+    created() {
+        if (!this.$store.state.credentials) {
+            const storedCredentials = localStorage.getItem("credentials");
+            if (storedCredentials) {
+                const credentials = JSON.parse(storedCredentials);
+                this.$store.commit("setCredentials", credentials);
+            }
+            else {
+                this.$router.push('401'); 
+            }
+        }
+        if (!this.$store.state.currentProject) {
+            const storedProject = localStorage.getItem("currentProject");
+            if (storedProject) {
+                const currentProject = JSON.parse(storedProject);
+                this.$store.commit("setCurrentProject", currentProject);
+            }
+            else {
+                this.$router.push('projects');
+            }
+        }
+    },
     data() {
         const self = this;
         return {
@@ -426,13 +448,7 @@ export default {
         }
     },
     mounted() {
-        if (!this.$store.state.credentials) {
-            this.$router.push('401'); 
-        }
-        if (!this.$store.state.currentProject) {
-            this.$router.push('projects');
-        }
-        this.saveAsButtons = this.initialSaveAsButtons;
+       this.saveAsButtons = this.initialSaveAsButtons;
     },
     watch: {
         initialSaveAsName() {
