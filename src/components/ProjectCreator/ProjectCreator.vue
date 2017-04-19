@@ -20,54 +20,62 @@
     </div>
 </template>
 <script>
- import io from "../../socketClient";
- import statusCodes from "../../statusCodes";
+import io from "../../socketClient";
+import statusCodes from "../../statusCodes";
 
- export default {
-     name: "ProjectCreator",
-     data() {
-         return {
-             projectName: "",
-             serverError: null,
-             eexistError: null,
-             authError: null
-         };
-     },
-     methods: {
-         cancel() {
-             this.$router.push('/projects');
-         },
-         handleSubmit(event) {
-             const self = this;
-             const credentials = self.$store.state.credentials;
-             io.emit("createProject",
-                     {credentials: credentials, projectName: self.projectName},
-                     function(response) {
-                         if (response.status === statusCodes.OKAY) {
-                             self.$store.commit("addProject", response.project);
-                             self.$store.commit("setCurrentProject", response.project);
-                             localStorage.setItem("projects", JSON.stringify(self.$store.state.projects));
-                             localStorage.setItem("currentProject", JSON.stringify(response.project));
-                             self.$router.push("/editor");
-                         }
-                         else if (response.status === statusCodes.ACCESS_DENIED) {
-                             self.authError = true;
-                         }
-                         else if (response.status === statusCodes.EEXIST) {
-                             self.eexisterror = true;
-                         }
-                         else {
-                             self.serverError = true;
-                         }
-                     });
-         },
-         input(event) {
-             this.serverError = null;
-             this.eexistError = null;
-             this.authError = null;
-         }
-     }
- }
+export default {
+    name: "ProjectCreator",
+    data() {
+        return {
+            projectName: "",
+            serverError: null,
+            eexistError: null,
+            authError: null
+        };
+    },
+    methods: {
+        cancel() {
+            this.$router.push("/projects");
+        },
+        handleSubmit(event) {
+            const self = this;
+            const credentials = self.$store.state.credentials;
+            io.emit(
+                "createProject",
+                { credentials: credentials, projectName: self.projectName },
+                function(response) {
+                    if (response.status === statusCodes.OKAY) {
+                        self.$store.commit("addProject", response.project);
+                        self.$store.commit(
+                            "setCurrentProject",
+                            response.project
+                        );
+                        localStorage.setItem(
+                            "projects",
+                            JSON.stringify(self.$store.state.projects)
+                        );
+                        localStorage.setItem(
+                            "currentProject",
+                            JSON.stringify(response.project)
+                        );
+                        self.$router.push("/editor");
+                    } else if (response.status === statusCodes.ACCESS_DENIED) {
+                        self.authError = true;
+                    } else if (response.status === statusCodes.EEXIST) {
+                        self.eexisterror = true;
+                    } else {
+                        self.serverError = true;
+                    }
+                }
+            );
+        },
+        input(event) {
+            this.serverError = null;
+            this.eexistError = null;
+            this.authError = null;
+        }
+    }
+};
 </script>
 <style lang="scss" scoped>
  @import "../../scss/colors.scss";

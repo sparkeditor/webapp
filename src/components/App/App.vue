@@ -70,9 +70,8 @@ export default {
             if (storedCredentials) {
                 const credentials = JSON.parse(storedCredentials);
                 this.$store.commit("setCredentials", credentials);
-            }
-            else {
-                this.$router.push('401'); 
+            } else {
+                this.$router.push("401");
             }
         }
         if (!this.$store.state.currentProject) {
@@ -80,9 +79,8 @@ export default {
             if (storedProject) {
                 const currentProject = JSON.parse(storedProject);
                 this.$store.commit("setCurrentProject", currentProject);
-            }
-            else {
-                this.$router.push('projects');
+            } else {
+                this.$router.push("projects");
             }
         }
     },
@@ -448,7 +446,7 @@ export default {
         }
     },
     mounted() {
-       this.saveAsButtons = this.initialSaveAsButtons;
+        this.saveAsButtons = this.initialSaveAsButtons;
     },
     watch: {
         initialSaveAsName() {

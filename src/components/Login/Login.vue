@@ -28,52 +28,58 @@
     </Container>
 </template>
 <script>
- import Container from "../Container";
- import statusCodes from "../../statusCodes";
- import io from "../../socketClient";
- 
- export default {
-     name: "Login",
-     components: {
-         Container
-     },
-     data: function() {
-         return {
-             username: null,
-             password: null,
-             error: false,
-             serverError: false
-         }
-     },
-     methods: {
-         input(event) {
-             this.error = false;
-             this.serverError = false;
-         },
-         handleSubmit(event) {
-             const self = this;
-             const credentials = {
-                 username: self.username,
-                 password: self.password
-             };
-             io.emit("authorize", {credentials: credentials}, function(result) {
-                 if (result.status === statusCodes.OKAY) {
-                     self.$store.commit("setCredentials", credentials);
-                     self.$store.commit("setProjects", result.projects);
-                     localStorage.setItem("credentials", JSON.stringify(credentials));
-                     localStorage.setItem("projects", JSON.stringify(result.projects));
-                     self.$router.push("/projects");
-                 }
-                 else if (result.status === statusCodes.ACCESS_DENIED) {
-                     self.error = true;
-                 }
-                 else {
-                     self.serverError = true;
-                 }
-             });
-         }
-     }
- }
+import Container from "../Container";
+import statusCodes from "../../statusCodes";
+import io from "../../socketClient";
+
+export default {
+    name: "Login",
+    components: {
+        Container
+    },
+    data: function() {
+        return {
+            username: null,
+            password: null,
+            error: false,
+            serverError: false
+        };
+    },
+    methods: {
+        input(event) {
+            this.error = false;
+            this.serverError = false;
+        },
+        handleSubmit(event) {
+            const self = this;
+            const credentials = {
+                username: self.username,
+                password: self.password
+            };
+            io.emit("authorize", { credentials: credentials }, function(
+                result
+            ) {
+                if (result.status === statusCodes.OKAY) {
+                    self.$store.commit("setCredentials", credentials);
+                    self.$store.commit("setProjects", result.projects);
+                    localStorage.setItem(
+                        "credentials",
+                        JSON.stringify(credentials)
+                    );
+                    localStorage.setItem(
+                        "projects",
+                        JSON.stringify(result.projects)
+                    );
+                    self.$router.push("/projects");
+                } else if (result.status === statusCodes.ACCESS_DENIED) {
+                    self.error = true;
+                } else {
+                    self.serverError = true;
+                }
+            });
+        }
+    }
+};
 </script>
 <style lang="scss" scoped>
  @import "../../scss/colors.scss";

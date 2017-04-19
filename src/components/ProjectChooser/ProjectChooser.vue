@@ -27,96 +27,99 @@
     </Container>
 </template>
 <script>
- import {mapState} from "vuex";
- import Container from "../Container";
- import io from "../../socketClient";
- 
- export default {
-     name: "ProjectChooser",
-     components: {
-         Container
-     },
-     computed: {
-         shouldShowNewProjectButton() {
-             if (this.$route.path === "/projects/new") {
-                 return false;
-             }
-             else {
-                 return this.showNewProjectButton;
-             }
-         },
-         ...mapState([
-             'credentials',
-             'projects'
-         ])
-     },
-     created() {
-         const self = this;
+import { mapState } from "vuex";
+import Container from "../Container";
+import io from "../../socketClient";
 
-         if (!this.credentials) {
-             const storedCredentials = localStorage.getItem("credentials");
-             const storedProjects = localStorage.getItem("projects");
-             if (storedCredentials && storedProjects) {
-                 const credentials = JSON.parse(storedCredentials);
-                 const projects = JSON.parse(storedProjects);
-                 this.$store.commit("setCredentials", credentials);
-                 this.$store.commit("setProjects", projects);
-             }
-         }
-         else {
-             io.emit("authorize", {credentials: this.credentials}, response => {
-                 if (response.status === statusCodes.OKAY) {
-                     self.$store.commit("setCredentials", credentials);
-                     self.$store.commit("setProjects", response.projects);
-                     localStorage.setItem("credentials", JSON.stringify(credentials));
-                     localStorage.setItem("projects", JSON.stringify(response.projects));
-                 }
-                 else if (response.status === statusCodes.ACCESS_DENIED) {
-                     self.$router.push('401');
-                 }
-                 else {
-                     console.error(response);
-                 }
-             });
-         }
-     },
-     data() {
-         return {
-             active: null,
-             showNewProjectButton: true
-         }
-     },
-     methods: {
-         folderClass(project) {
-             return {
-                 "fa-folder": this.active !== project,
-                 "fa-folder-open": this.active === project
-             }
-         },
-         handleProjectClick(project) {
-             this.$store.commit("setCurrentProject", project);
-             localStorage.setItem("currentProject", JSON.stringify(project));
-             this.$router.push("/editor");
-         },
-         setActive(project) {
-             this.active = project;
-         },
-         clearActive() {
-             this.active = null;
-         },
-         handleNewProjectClick() {
-             this.showNewProjectButton = false;
-             this.$router.push("/projects/new");
-         }
-     },
-     watch: {
-         "$route" (to, from) {
-             if (to.path === "/projects") {
-                 this.showNewProjectButton = true;
-             }
-         }
-     }
- }
+export default {
+    name: "ProjectChooser",
+    components: {
+        Container
+    },
+    computed: {
+        shouldShowNewProjectButton() {
+            if (this.$route.path === "/projects/new") {
+                return false;
+            } else {
+                return this.showNewProjectButton;
+            }
+        },
+        ...mapState(["credentials", "projects"])
+    },
+    created() {
+        const self = this;
+
+        if (!this.credentials) {
+            const storedCredentials = localStorage.getItem("credentials");
+            const storedProjects = localStorage.getItem("projects");
+            if (storedCredentials && storedProjects) {
+                const credentials = JSON.parse(storedCredentials);
+                const projects = JSON.parse(storedProjects);
+                this.$store.commit("setCredentials", credentials);
+                this.$store.commit("setProjects", projects);
+            }
+        } else {
+            io.emit(
+                "authorize",
+                { credentials: this.credentials },
+                response => {
+                    if (response.status === statusCodes.OKAY) {
+                        self.$store.commit("setCredentials", credentials);
+                        self.$store.commit("setProjects", response.projects);
+                        localStorage.setItem(
+                            "credentials",
+                            JSON.stringify(credentials)
+                        );
+                        localStorage.setItem(
+                            "projects",
+                            JSON.stringify(response.projects)
+                        );
+                    } else if (response.status === statusCodes.ACCESS_DENIED) {
+                        self.$router.push("401");
+                    } else {
+                        console.error(response);
+                    }
+                }
+            );
+        }
+    },
+    data() {
+        return {
+            active: null,
+            showNewProjectButton: true
+        };
+    },
+    methods: {
+        folderClass(project) {
+            return {
+                "fa-folder": this.active !== project,
+                "fa-folder-open": this.active === project
+            };
+        },
+        handleProjectClick(project) {
+            this.$store.commit("setCurrentProject", project);
+            localStorage.setItem("currentProject", JSON.stringify(project));
+            this.$router.push("/editor");
+        },
+        setActive(project) {
+            this.active = project;
+        },
+        clearActive() {
+            this.active = null;
+        },
+        handleNewProjectClick() {
+            this.showNewProjectButton = false;
+            this.$router.push("/projects/new");
+        }
+    },
+    watch: {
+        $route(to, from) {
+            if (to.path === "/projects") {
+                this.showNewProjectButton = true;
+            }
+        }
+    }
+};
 </script>
 <style lang="scss" scoped>
  @import "../../scss/colors.scss";
