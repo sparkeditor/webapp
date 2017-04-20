@@ -30,6 +30,7 @@
 import { mapState } from "vuex";
 import Container from "../Container";
 import io from "../../socketClient";
+import statusCodes from "../../statusCodes";
 
 export default {
     name: "ProjectChooser",
@@ -64,11 +65,11 @@ export default {
                 { credentials: this.credentials },
                 response => {
                     if (response.status === statusCodes.OKAY) {
-                        self.$store.commit("setCredentials", credentials);
+                        self.$store.commit("setCredentials", self.credentials);
                         self.$store.commit("setProjects", response.projects);
                         localStorage.setItem(
                             "credentials",
-                            JSON.stringify(credentials)
+                            JSON.stringify(self.credentials)
                         );
                         localStorage.setItem(
                             "projects",
