@@ -73,8 +73,7 @@ export default {
             } else {
                 this.$router.push("401");
             }
-        }
-        if (!this.$store.state.currentProject) {
+        } else if (!this.$store.state.currentProject) {
             const storedProject = localStorage.getItem("currentProject");
             if (storedProject) {
                 const currentProject = JSON.parse(storedProject);
