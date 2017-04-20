@@ -14,8 +14,11 @@ const routes = [
     {
         path: "/",
         redirect: () => {
-            // TODO if there is a user in a cookie/web worker, redirect to app
-            return "/login";
+            if (localStorage.getItem("credentials")) {
+                return "/projects";
+            } else {
+                return "/login";
+            }
         }
     },
     { path: "/login", component: Login },
