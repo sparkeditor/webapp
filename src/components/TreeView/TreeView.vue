@@ -40,6 +40,11 @@ export default {
     mounted() {
         const self = this;
         this.loading = true;
+
+        if (!this.credentials || !this.currentProject) {
+            return;
+        }
+
         io.emit(
             "openProject",
             {
