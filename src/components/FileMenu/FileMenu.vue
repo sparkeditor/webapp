@@ -63,7 +63,7 @@
   .topMenu > .topMenuItem {
       min-width: 50px;
       float: left;
-      padding-top: 0.5em;
+      padding: 0.5em 0.2em 0.5em 0.2em;
       text-align: center;
   }
   .topMenu > .topMenuItem:hover {

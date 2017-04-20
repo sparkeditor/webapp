@@ -107,6 +107,9 @@ export default {
                 Edit: {
                     Undo: () => self.$store.state.editor.undo(),
                     Redo: () => self.$store.state.editor.redo()
+                },
+                Logout: () => {
+                    self.$router.push("logout");
                 }
             },
             saveAsMessage: "",
@@ -485,7 +488,6 @@ export default {
  }
  .menu {
      border-bottom: 1px solid $heather;
-     padding-bottom: 0.5em;
  }
  .saveAsInput, .newDirInput {
     border: none;

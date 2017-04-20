@@ -26,7 +26,17 @@ const routes = [
         children: [{ path: "new", component: ProjectCreator }]
     },
     { path: "/editor", component: App },
-    { path: "/401", component: Unauthorized }
+    { path: "/401", component: Unauthorized },
+    {
+        path: "/logout",
+        redirect: () => {
+            localStorage.clear();
+            store.commit("setCredentials", null);
+            store.commit("setCurrentProject", null);
+            store.commit("setProjects", null);
+            return "/login";
+        }
+    }
 ];
 
 const router = new VueRouter({
